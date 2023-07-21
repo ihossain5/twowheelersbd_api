@@ -21,5 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(HomeController::class)
 ->group(function () {
-    Route::get('/sliders', 'sliders')->name('home');
+    Route::get('/sliders', 'sliders');
+    Route::get('/hot-deals', 'hotDeals');
 });

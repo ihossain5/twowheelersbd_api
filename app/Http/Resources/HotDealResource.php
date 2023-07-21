@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SliderResource extends JsonResource
+class HotDealResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,9 @@ class SliderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'photo' => $this->photo
+            'banner' => $this->banner,
+            'shop_name' => $this->shop->name,
+            'shop_logo' => $this->shop->logo,
         ];
     }
 }

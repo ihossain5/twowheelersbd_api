@@ -13,7 +13,7 @@ class Slider extends Model
     protected function photo(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => 'http://127.0.0.1:8000/admin/images/' . $value,
+            get: fn (string $value) => BASE_URL(). $value,
         );
     }
 }
