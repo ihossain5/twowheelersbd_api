@@ -22,4 +22,8 @@ class Shop extends Model
             get: fn (string $value) => BASE_URL() . $value,
         );
     }
+
+    public function owner(){
+        return $this->belongsTo(ShopOwner::class,'shop_owner_id');
+    }
 }
