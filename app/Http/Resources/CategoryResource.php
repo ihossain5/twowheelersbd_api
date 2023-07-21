@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class HotDealResource extends JsonResource
+class CategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,12 @@ class HotDealResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'banner' => $this->banner,
-            'shop_name' => $this->shop->name,
-            'shop_logo' => $this->shop->logo,
+            'photo' => $this->photo,
+            'name' => $this->name,
+            'is_shown_navbar' => $this->is_shown_navbar,
+            'is_shown_sidebar' => $this->is_shown_sidebar,
+            'subcategories' => SubcategoryResource::collection($this->subcategories),
+
         ];
     }
 }

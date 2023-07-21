@@ -23,4 +23,5 @@ Route::controller(HomeController::class)
 ->group(function () {
     Route::get('/sliders', 'sliders');
     Route::get('/hot-deals', 'hotDeals');
+    Route::get('/categories', 'categories');
 });
