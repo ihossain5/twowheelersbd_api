@@ -101,7 +101,8 @@ class HomeController extends Controller
     public function products(){
         try {
             $products = Product::query()
-            ->with('brand','model','specifications','subcategory','catelogues')
+            ->select('id','sub_category_id','name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images')
+            ->with('subcategory:id,category_id,name','subcategory.category:id,name')
             ->where('status','APPROVED')
             ->where('is_visible',1)
             ->get();

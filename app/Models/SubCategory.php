@@ -17,4 +17,8 @@ class SubCategory extends Model
             get: fn (string $value) => BASE_URL() . $value,
         );
     }
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
+
 }
