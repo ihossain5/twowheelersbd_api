@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BlogResource;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\HotDealResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ShopResource;
 use App\Http\Resources\SliderResource;
+use App\Models\Blog;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\HotDeal;
@@ -108,6 +110,23 @@ class HomeController extends Controller
             ->get();
         
         return  $this->success(ProductResource::collection($products));
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ]);
+        }
+
+    }
+    public function blogs(){
+        try {
+            $blogs = Blog::query()
+            ->select('id','title','description','photos','date')
+            ->where('status',1)
+            ->get();
+        
+        return  $this->success(BlogResource::collection($blogs));
 
         } catch (\Throwable $th) {
             return response()->json([

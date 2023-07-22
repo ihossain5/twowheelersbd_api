@@ -25,15 +25,7 @@ class ProductResource extends JsonResource
             'regular_price' => $this->regular_price,
             'discounted_price' => $this->discounted_price,
             'is_available' => $this->is_available == 1 ? 'Available' : 'Not Avaialable',
-            'image' =>  $this->addUrl(collect(json_decode($this->images))->take(1)),
+            'image' =>  addUrl(collect(json_decode($this->images))->take(1)),
         ];
-    }
-
-    private function addUrl($images){
-        $data = [];
-        foreach ($images as $image){
-            $data[] = BASE_URL().$image;
-        }
-        return $data;
     }
 }
