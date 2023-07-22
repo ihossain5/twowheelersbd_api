@@ -29,3 +29,8 @@ Route::controller(HomeController::class)
     Route::get('/products', 'products');
     Route::get('/blogs', 'blogs');
 });
+
+Route::fallback(function(){
+    return response()->json([
+        'message' => 'Page Not Found. If error persists, contact with site owner'], 404);
+});

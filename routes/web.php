@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/clear-cache/',function(){
+    $configCache = Artisan::call('config:cache');
+    $clearCache  = Artisan::call('cache:clear');
+    $clearRoute  = Artisan::call('route:clear');
+    $clearView   = Artisan::call('view:clear');
+    // return what you want
+    return "Finished";
+});
+
+Route::fallback(function(){
+    return response()->json([
+        'message' => 'Page Not Found. If error persists, contact with site owner'], 404);
 });
