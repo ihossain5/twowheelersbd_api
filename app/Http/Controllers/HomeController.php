@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\BlogResource;
+use App\Http\Resources\BrandCollection;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\HotDealResource;
@@ -71,9 +72,9 @@ class HomeController extends Controller
         try {
             $brands = Brand::query()->select('id','photo','name','details')
             ->where('status',1)
-            ->get();
-        
-        return  $this->success(BrandResource::collection($brands));
+            ->paginate(1);
+            
+        return  $this->success(BrandResource::collection($brands)->response()->getData(true));
 
         } catch (\Throwable $th) {
             return response()->json([
