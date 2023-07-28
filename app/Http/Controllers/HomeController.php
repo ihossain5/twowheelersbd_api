@@ -34,14 +34,16 @@ class HomeController extends Controller
         }
     }
 
-    public function hotDeals(){
+    public function hotDeals(Request $request){
         try {
+            if($request->pagination) $pagination = $request->pagination;
+
             $deals = HotDeal::query()->select('id','shop_id','banner','title')
                 ->with('shop:id,name,logo')
                 ->where('status',1)
-                ->get();
+                ->paginate($pagination ?? $this->pagination);
             
-            return  $this->success(HotDealResource::collection($deals));
+            return  $this->success(HotDealResource::collection($deals)->response()->getData(true));
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -68,11 +70,13 @@ class HomeController extends Controller
 
     }
 
-    public function brands(){
+    public function brands(Request $request){
         try {
+            if($request->pagination) $pagination = $request->pagination;
+
             $brands = Brand::query()->select('id','photo','name','details')
             ->where('status',1)
-            ->paginate(1);
+            ->paginate($pagination ?? $this->pagination);
             
         return  $this->success(BrandResource::collection($brands)->response()->getData(true));
 
@@ -84,14 +88,15 @@ class HomeController extends Controller
         }
 
     }
-    public function shops(){
+    public function shops(Request $request){
         try {
+            if($request->pagination) $pagination = $request->pagination;
             $shops = Shop::query()->select('id','shop_owner_id','logo','name','photo','discription','division','commission_rate')
             ->with('owner')
             ->where('status','APPROVED')
-            ->get();
+            ->paginate($pagination ?? $this->pagination);
         
-        return  $this->success(ShopResource::collection($shops));
+        return  $this->success(ShopResource::collection($shops)->response()->getData(true));
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -101,16 +106,18 @@ class HomeController extends Controller
         }
 
     }
-    public function products(){
+    public function products(Request $request){
         try {
+            if($request->pagination) $pagination = $request->pagination;
+
             $products = Product::query()
             ->select('id','sub_category_id','name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images')
             ->with('subcategory:id,category_id,name','subcategory.category:id,name')
             ->where('status','APPROVED')
             ->where('is_visible',1)
-            ->get();
+            ->paginate($pagination ?? $this->pagination);
         
-        return  $this->success(ProductResource::collection($products));
+        return  $this->success(ProductResource::collection($products)->response()->getData(true));
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -120,14 +127,16 @@ class HomeController extends Controller
         }
 
     }
-    public function blogs(){
+    public function blogs(Request $request){
         try {
+            if($request->pagination) $pagination = $request->pagination;
+
             $blogs = Blog::query()
             ->select('id','title','description','photos','date')
             ->where('status',1)
-            ->get();
+            ->paginate($pagination ?? $this->pagination);
         
-        return  $this->success(BlogResource::collection($blogs));
+        return  $this->success(BlogResource::collection($blogs)->response()->getData(true));
 
         } catch (\Throwable $th) {
             return response()->json([
