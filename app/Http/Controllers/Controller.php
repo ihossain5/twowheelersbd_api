@@ -10,7 +10,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public $pagination = 5;
+    public $pagination = 10;
 
     public function success($result){
         return [
