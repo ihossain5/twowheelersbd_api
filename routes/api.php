@@ -25,6 +25,7 @@ Route::controller(HomeController::class)
     Route::get('/hot-deals', 'hotDeals');
     Route::get('/categories', 'categories');
     Route::get('/brands', 'brands');
+    Route::get('/brand-categories', 'brandCategoies');
     Route::get('/shops', 'shops');
     Route::get('/products', 'products');
     Route::get('/blogs', 'blogs');

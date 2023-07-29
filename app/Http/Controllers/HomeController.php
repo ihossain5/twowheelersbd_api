@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\BlogResource;
+use App\Http\Resources\BrandCategoryResource;
 use App\Http\Resources\BrandCollection;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CategoryResource;
@@ -12,6 +13,7 @@ use App\Http\Resources\ShopResource;
 use App\Http\Resources\SliderResource;
 use App\Models\Blog;
 use App\Models\Brand;
+use App\Models\BrandCategory;
 use App\Models\Category;
 use App\Models\HotDeal;
 use App\Models\Product;
@@ -137,6 +139,25 @@ class HomeController extends Controller
             ->paginate($pagination ?? $this->pagination);
         
         return  $this->success(BlogResource::collection($blogs)->response()->getData(true));
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage(),
+            ]);
+        }
+
+    }
+
+    public function brandCategoies(Request $request){
+        try {
+            if($request->pagination) $pagination = $request->pagination;
+
+            $blogs = BrandCategory::query()
+            ->with('models')
+            ->paginate($pagination ?? $this->pagination);
+        
+        return  $this->success(BrandCategoryResource::collection($blogs)->response()->getData(true));
 
         } catch (\Throwable $th) {
             return response()->json([
