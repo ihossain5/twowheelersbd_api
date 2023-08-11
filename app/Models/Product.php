@@ -19,7 +19,11 @@ class Product extends Model
     }
 
     public function model(){
-        return $this->belongsTo(BrandModel::class,'brand_model_id');
+        return 
+        $this->belongsTo(BrandModel::class,'brand_model_id');
+    }
+    public function shop(){
+        return $this->belongsTo(Shop::class);
     }
 
     public function catelogues(){
@@ -30,7 +34,10 @@ class Product extends Model
         return $this->hasMany(ProductSpecification::class);
     }
 
-    
+    public function motors(){
+        return $this->hasMany(ProductMotor::class);
+    }
+
     protected function catelogue_pdf(): Attribute
     {
         return Attribute::make(
@@ -38,11 +45,5 @@ class Product extends Model
         );
     }
 
-    // protected function video(): Attribute
-    // {
-    //     return Attribute::make(
-    //         get: fn (string $value) => is_null(!$value) ? BASE_URL() . $value : '',
-    //     );
-    // }
     
 }

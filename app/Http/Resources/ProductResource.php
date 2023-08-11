@@ -33,10 +33,12 @@ class ProductResource extends JsonResource
             'discounted_price' => $this->discounted_price,
             'is_available' => $this->is_available == 1 ? 'Available' : 'Not Avaialable',
             'sub_category' => $this->subcategory,
-            'brand' => $this->brand_id !== null ? new BrandResource($this->brand) : 'ALL',
-            'model' => $this->brand_model_id !== null ? new BrandModelResource($this->model) : 'ALL',
-            'catelogues' => $this->catelogues,
-            'specifications' => $this->specifications,
+            'shop' => $this->shop->name,
+            'brand' => $this->brand_id !== null ? $this->brand->name : 'ALL',
+            'model' => $this->brand_model_id !== null ? $this->model->name : 'ALL',
+            'catelogues' => ProductCatelogueResource::collection($this->catelogues),
+            'specifications' => ProductSpecificationResource::collection($this->specifications),
+            'motors' => ProductMotorResource::collection($this->motors),
             
         ];
     }

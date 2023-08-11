@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductSpecification extends Model
+class ProductMotor extends Model
 {
     use HasFactory;
 
-    public function specification(){
-        return $this->belongsTo(Specification::class);
+    public function model(){
+        return $this->belongsTo(BrandModel::class,'brand_model_id');
     }
 }
