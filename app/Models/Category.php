@@ -14,6 +14,10 @@ class Category extends Model
         return $this->hasMany(SubCategory::class)->where('status',1);
     }
 
+    public function products(){
+        return $this->hasManyThrough(Product::class, SubCategory::class);
+    }
+
     protected function photo(): Attribute
     {
         return Attribute::make(

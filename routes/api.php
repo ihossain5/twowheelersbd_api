@@ -35,6 +35,7 @@ Route::controller(ApiController::class)
     Route::get('/products', 'products');
     Route::get('/products/{id}/details', 'getProductById');
     Route::get('/brand-categories', 'brandCategories');
+    Route::get('/category/{id}/products', 'categoryWiseProducts');
 });
 
 Route::fallback(function(){
