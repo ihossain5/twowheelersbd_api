@@ -148,23 +148,4 @@ class HomeController extends Controller
         }
 
     }
-
-    public function brandCategoies(Request $request){
-        try {
-            if($request->pagination) $pagination = $request->pagination;
-
-            $blogs = BrandCategory::query()
-            ->with('models')
-            ->paginate($pagination ?? $this->pagination);
-        
-        return  $this->success(BrandCategoryResource::collection($blogs)->response()->getData(true));
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-            ]);
-        }
-
-    }
 }

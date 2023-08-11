@@ -26,7 +26,6 @@ Route::controller(HomeController::class)
     Route::get('/hot-deals', 'hotDeals');
     Route::get('/categories', 'categories');
     Route::get('/brands', 'brands');
-    Route::get('/brand-categories', 'brandCategoies');
     Route::get('/shops', 'shops');
     Route::get('/blogs', 'blogs');
 });
@@ -35,6 +34,7 @@ Route::controller(ApiController::class)
 ->group(function () {
     Route::get('/products', 'products');
     Route::get('/products/{id}/details', 'getProductById');
+    Route::get('/brand-categories', 'brandCategories');
 });
 
 Route::fallback(function(){

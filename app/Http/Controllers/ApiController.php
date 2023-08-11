@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BrandCategoryResource;
 use App\Http\Resources\ProductResource;
+use App\Models\BrandCategory;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -45,5 +47,18 @@ class ApiController extends Controller
                 'message' => $th->getMessage(),
             ]);
         }
+    }
+
+    public function brandCategories(Request $request){
+
+            if($request->pagination) $this->pagination = $request->pagination;
+
+            $brand_categories = BrandCategory::query()
+            ->with('models')
+            ->paginate($this->pagination);
+        
+        return  $this->success (BrandCategoryResource::collection($brand_categories));
+
+
     }
 }

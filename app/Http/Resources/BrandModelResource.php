@@ -17,7 +17,14 @@ class BrandModelResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'brand_category_name' => $this->brandCategory->name,
+            'description' => $this->info,
+            'images' =>  addUrl(collect(json_decode($this->images))),
+            'video' => $this->video,
+            'catelogue_pdf' => $this->catelogue_pdf,
+            'catelogues' => $this->catelogues,
+            'colors' => $this->colors,
+            'specifications' => $this->specifications,
+            
         ];
     }
 }

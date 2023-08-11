@@ -14,6 +14,11 @@ class BrandCategoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id'=> $this->id,
+            'brand' => $this->brand->name,
+            'name' => $this->name,
+            'models' => BrandModelResource::collection($this->models),
+        ];
     }
 }
