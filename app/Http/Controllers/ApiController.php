@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BrandCategoryResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\SubcategoryResource;
 use App\Models\BrandCategory;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
@@ -58,16 +60,22 @@ class ApiController extends Controller
             ->with('models')
             ->paginate($this->pagination);
         
-        return  $this->success (BrandCategoryResource::collection($brand_categories));
+        return  $this->success (BrandCategoryResource::collection($brand_categories)->response()->getData(true));
     }
 
-    public function categoryWiseProducts(Request $request,$id){
-        if($request->pagination) $this->pagination = $request->pagination;
-
+    public function productsByCategory(Request $request,$id){
         $category = Category::query()
             ->with('products','subcategories')
             ->findOrFail($id);
 
         return  $this->success(new CategoryResource($category));
+    }
+
+    public function productsBySubCategory(Request $request,$id){
+        $subcategory = SubCategory::query()
+            ->with('products')
+            ->findOrFail($id);
+
+        return  $this->success(new SubcategoryResource($subcategory));
     }
 }

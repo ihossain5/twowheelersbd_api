@@ -18,6 +18,7 @@ class SubcategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'photo' => $this->photo,
+            'products' => ProductResource::collection($this->products),
         ];
     }
 }
