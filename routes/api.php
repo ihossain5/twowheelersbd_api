@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,8 +28,13 @@ Route::controller(HomeController::class)
     Route::get('/brands', 'brands');
     Route::get('/brand-categories', 'brandCategoies');
     Route::get('/shops', 'shops');
-    Route::get('/products', 'products');
     Route::get('/blogs', 'blogs');
+});
+
+Route::controller(ApiController::class)
+->group(function () {
+    Route::get('/products', 'products');
+    Route::get('/products/{id}/details', 'getProductById');
 });
 
 Route::fallback(function(){
