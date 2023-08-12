@@ -37,6 +37,10 @@ Route::controller(ApiController::class)
     Route::get('/brand-categories', 'brandCategories');
     Route::get('/category/{id}/products', 'productsByCategory');
     Route::get('/sub-category/{id}/products', 'productsBySubCategory')->name('subcategory.products');
+    Route::get('/shop/{id}/products', 'productsByShop')->name('shop.products');
+    Route::get('/model/{id}/products', 'productsByModel')->name('model.products');
+    Route::get('/models', 'models')->name('all.models');
+    Route::get('/accessories', 'accessories')->name('all.accessories');
 });
 
 Route::fallback(function(){
