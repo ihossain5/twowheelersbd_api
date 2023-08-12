@@ -10,7 +10,7 @@ class BrandCategory extends Model
     use HasFactory;
 
     public function models(){
-        return $this->hasMany(BrandModel::class);
+        return $this->hasMany(BrandModel::class)->where('status',1);
     }
     public function brand(){
         return $this->belongsTo(Brand::class);

@@ -24,120 +24,85 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function sliders(){
-        try {
-            $sliders = Slider::query()->select('id','photo')->where('status',1)->get();
+        $sliders = Slider::query()->select('id','photo')->where('status',1)->get();
         
-            return  $this->success(SliderResource::collection($sliders));
-        } catch (\Throwable $th) {
-                return response()->json([
-                    'status' => false,
-                    'message' => $th->getMessage(),
-            ]);
-        }
+        return  $this->success(SliderResource::collection($sliders));
     }
 
     public function hotDeals(Request $request){
-        try {
-            if($request->pagination) $pagination = $request->pagination;
+        if($request->pagination) $this->pagination = $request->pagination;
 
-            $deals = HotDeal::query()->select('id','shop_id','banner','title')
+        $deals = HotDeal::query()->select('id','shop_id','banner','title')
                 ->with('shop:id,name,logo')
                 ->where('status',1)
-                ->paginate($pagination ?? $this->pagination);
+                ->paginate($this->pagination);
             
-            return  $this->success(HotDealResource::collection($deals)->response()->getData(true));
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-            ]);
-        }
+        return  $this->success(HotDealResource::collection($deals)->response()->getData(true));
+
     }
 
-    public function categories(){
+    public function categories(Request $request){
+        if($request->pagination) $this->pagination = $request->pagination;
+
         $categories = Category::query()->select('id','photo','name','is_shown_navbar','is_shown_sidebar')
             ->with('subcategories:id,category_id,name,photo')
             ->where('status',1)
-            ->get();
+            ->paginate($this->pagination);
         
         return  $this->success(CategoryResource::collection($categories));
 
     }
 
     public function brands(Request $request){
-        try {
-            if($request->pagination) $pagination = $request->pagination;
+        if($request->pagination) $this->pagination = $request->pagination;
 
-            $brands = Brand::query()->select('id','photo','name','details')
+        $brands = Brand::query()->select('id','photo','name','details')
             ->where('status',1)
-            ->paginate($pagination ?? $this->pagination);
+            ->paginate($this->pagination);
             
         return  $this->success(BrandResource::collection($brands)->response()->getData(true));
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-            ]);
-        }
-
     }
+
     public function shops(Request $request){
-        try {
-            if($request->pagination) $pagination = $request->pagination;
+        if($request->pagination) $this->pagination = $request->pagination;
+
             $shops = Shop::query()->select('id','shop_owner_id','logo','name','photo','discription','division','commission_rate')
             ->with('owner')
             ->where('status','APPROVED')
-            ->paginate($pagination ?? $this->pagination);
+            ->paginate($this->pagination);
         
         return  $this->success(ShopResource::collection($shops)->response()->getData(true));
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-            ]);
-        }
-
     }
-    public function products(Request $request){
-        try {
-            if($request->pagination) $pagination = $request->pagination;
+    // public function products(Request $request){
+    //     try {
+    //         if($request->pagination) $this->pagination = $request->pagination;
 
-            $products = Product::query()
-            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status')
-            ->with('subcategory:id,category_id,name','subcategory.category:id,name')
-            ->where('status','APPROVED')
-            ->where('is_visible',1)
-            ->paginate($pagination ?? $this->pagination);
+    //         $products = Product::query()
+    //         ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status')
+    //         ->with('subcategory:id,category_id,name','subcategory.category:id,name')
+    //         ->where('status','APPROVED')
+    //         ->where('is_visible',1)
+    //         ->paginate($pagination ?? $this->pagination);
         
-        return  $this->success(ProductResource::collection($products)->response()->getData(true));
+    //     return  $this->success(ProductResource::collection($products)->response()->getData(true));
 
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-            ]);
-        }
+    //     } catch (\Throwable $th) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => $th->getMessage(),
+    //         ]);
+    //     }
 
-    }
+    // }
+
     public function blogs(Request $request){
-        try {
-            if($request->pagination) $pagination = $request->pagination;
+        if($request->pagination) $this->pagination = $request->pagination;
 
-            $blogs = Blog::query()
+        $blogs = Blog::query()
             ->select('id','title','description','photos','date')
             ->where('status',1)
-            ->paginate($pagination ?? $this->pagination);
+            ->paginate($this->pagination);
         
         return  $this->success(BlogResource::collection($blogs)->response()->getData(true));
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage(),
-            ]);
-        }
-
     }
 }

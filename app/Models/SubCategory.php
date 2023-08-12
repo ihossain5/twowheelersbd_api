@@ -22,7 +22,7 @@ class SubCategory extends Model
     }
 
     public function products(){
-        return $this->hasMany(Product::class)->where('status','APPROVED')->where('is_motorbike',0);
+        return $this->hasMany(Product::class)->where('status','APPROVED')->where('is_motorbike',0)->where('is_visible',1);
     }
 
 }

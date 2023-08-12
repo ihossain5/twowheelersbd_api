@@ -28,6 +28,6 @@ class Shop extends Model
     }
 
     public function products(){
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class)->where('is_motorbike',0)->where('status','APPROVED')->where('is_visible',1);
     }
 }
