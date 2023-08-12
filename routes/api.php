@@ -41,6 +41,8 @@ Route::controller(ApiController::class)
     Route::get('/model/{id}/products', 'productsByModel')->name('model.products');
     Route::get('/models', 'models')->name('all.models');
     Route::get('/accessories', 'accessories')->name('all.accessories');
+    Route::get('/motorbikes', 'motorbikes')->name('all.motorbikes');
+    Route::get('/motorbikes/{id}/details', 'motorbikeDetails')->name('motorbikes.details');
 });
 
 Route::fallback(function(){

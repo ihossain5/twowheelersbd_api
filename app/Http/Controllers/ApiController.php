@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BrandCategoryResource;
 use App\Http\Resources\BrandModelResource;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\MotorbikeResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ShopResource;
 use App\Http\Resources\SubcategoryResource;
@@ -108,5 +109,29 @@ class ApiController extends Controller
              ->paginate($this->pagination);
 
         return  $this->success(ProductResource::collection($products)->response()->getData(true));
+    }
+
+    public function motorbikes(Request $request){
+        if($request->pagination) $this->pagination = $request->pagination;
+   
+        $motorbikes = Product::query()
+             ->where('status','APPROVED')
+             ->where('is_motorbike',1)
+             ->where('is_visible',1)
+             ->with('model','shop','subcategory','subcategory.category')
+             ->paginate($this->pagination);
+
+        return  $this->success(MotorbikeResource::collection($motorbikes)->response()->getData(true));
+    }
+
+    public function motorbikeDetails($id){
+        $motorbikes = Product::query()
+             ->where('status','APPROVED')
+             ->where('is_motorbike',1)
+             ->where('is_visible',1)
+             ->with('model','shop','subcategory','subcategory.category')
+             ->findOrFail($id);
+
+        return  $this->success(new MotorbikeResource($motorbikes));
     }
 }
