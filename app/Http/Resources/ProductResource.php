@@ -16,7 +16,7 @@ class ProductResource extends JsonResource
     {
         return [
             'id' => $this->id,
-          
+            'sub_category' => $this->when($request->routeIs('products'), new SubcategoryResource($this->subcategory)),
             // 'category' => $this->subcategory->category,
             'name' => $this->name,
             'sku' => $this->sku,
@@ -32,7 +32,6 @@ class ProductResource extends JsonResource
             'regular_price' => $this->regular_price,
             'discounted_price' => $this->discounted_price,
             'is_available' => $this->is_available == 1 ? 'Available' : 'Not Avaialable',
-            'sub_category' => $this->subcategory,
             'shop' => $this->shop->name,
             'brand' => $this->brand_id !== null ? $this->brand->name : 'ALL',
             'model' => $this->brand_model_id !== null ? $this->model->name : 'ALL',

@@ -15,7 +15,7 @@ class Category extends Model
     }
 
     public function products(){
-        return $this->hasManyThrough(Product::class, SubCategory::class);
+        return $this->hasManyThrough(Product::class, SubCategory::class)->where('is_motorbike',0)->where('products.status','APPROVED');
     }
 
     protected function photo(): Attribute

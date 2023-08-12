@@ -14,7 +14,7 @@ class SubCategory extends Model
     protected function photo(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => BASE_URL() . $value,
+            get: fn ($value) => BASE_URL() . $value,
         );
     }
     public function category(){
@@ -22,7 +22,7 @@ class SubCategory extends Model
     }
 
     public function products(){
-        return $this->hasMany(Product::class)->where('status','APPROVED');
+        return $this->hasMany(Product::class)->where('status','APPROVED')->where('is_motorbike',0);
     }
 
 }

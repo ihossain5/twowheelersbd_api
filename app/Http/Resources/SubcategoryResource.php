@@ -18,7 +18,7 @@ class SubcategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'photo' => $this->photo,
-            'products' => ProductResource::collection($this->products),
+            'products' => $this->when($request->routeIs('subcategory.products'), ProductResource::collection($this->products)),
         ];
     }
 }

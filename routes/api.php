@@ -24,7 +24,7 @@ Route::controller(HomeController::class)
 ->group(function () {
     Route::get('/sliders', 'sliders');
     Route::get('/hot-deals', 'hotDeals');
-    Route::get('/categories', 'categories');
+    Route::get('/categories', 'categories')->name('categories');
     Route::get('/brands', 'brands');
     Route::get('/shops', 'shops');
     Route::get('/blogs', 'blogs');
@@ -32,11 +32,11 @@ Route::controller(HomeController::class)
 
 Route::controller(ApiController::class)
 ->group(function () {
-    Route::get('/products', 'products');
+    Route::get('/products', 'products')->name('products');
     Route::get('/products/{id}/details', 'getProductById');
     Route::get('/brand-categories', 'brandCategories');
     Route::get('/category/{id}/products', 'productsByCategory');
-    Route::get('/sub-category/{id}/products', 'productsBySubCategory');
+    Route::get('/sub-category/{id}/products', 'productsBySubCategory')->name('subcategory.products');
 });
 
 Route::fallback(function(){

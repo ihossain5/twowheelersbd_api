@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class CategoryResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -20,8 +21,8 @@ class CategoryResource extends JsonResource
             'name' => $this->name,
             'is_shown_navbar' => $this->is_shown_navbar,
             'is_shown_sidebar' => $this->is_shown_sidebar,
-            'products' => ProductResource::collection($this->products),
             'subcategories' => SubcategoryResource::collection($this->subcategories),
+            'products' => $this->when(!$request->routeIs('categories'), ProductResource::collection($this->products)),
 
         ];
     }
