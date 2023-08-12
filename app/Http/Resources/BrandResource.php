@@ -19,6 +19,7 @@ class BrandResource extends JsonResource
             'photo' => $this->photo,
             'name' => $this->name,
             'details' => $this->details,
+            'models' => BrandModelResource::collection($this->models),
         ];
     }
 }

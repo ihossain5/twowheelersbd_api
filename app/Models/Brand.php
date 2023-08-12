@@ -16,4 +16,8 @@ class Brand extends Model
             get: fn (string $value) => BASE_URL() . $value,
         );
     }
+
+    public function models(){
+        return $this->hasManyThrough(BrandModel::class, BrandCategory::class)->where('brand_models.status',1);
+    } 
 }

@@ -58,6 +58,7 @@ class HomeController extends Controller
 
         $brands = Brand::query()->select('id','photo','name','details')
             ->where('status',1)
+            ->with('models')
             ->paginate($this->pagination);
             
         return  $this->success(BrandResource::collection($brands)->response()->getData(true));
