@@ -23,7 +23,7 @@ class ApiController extends Controller
         if($request->pagination) $this->pagination = $request->pagination;
 
         $products = Product::query()
-            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status')
+            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status','sku')
             ->with('subcategory:id,category_id,name','subcategory.category:id,name')
             ->where('status','APPROVED')
             ->where('is_visible',1)
@@ -35,7 +35,7 @@ class ApiController extends Controller
 
     public function getProductById($id){
         $product = Product::query()
-            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status')
+            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status','sku')
             ->with('subcategory:id,category_id,name','subcategory.category:id,name')
             ->where('status','APPROVED')
             ->where('is_visible',1)
@@ -60,40 +60,84 @@ class ApiController extends Controller
             ->with('products','subcategories')
             ->findOrFail($id);
 
+        $category->setRelation('products', $category->products()->paginate(1));
+
         return  $this->success(new CategoryResource($category));
     }
 
-    public function productsBySubCategory($id){
-        $subcategory = SubCategory::query()
-            ->with('products')
-            ->findOrFail($id);
+    public function productsBySubCategory(Request $request, $id){
+        if($request->pagination) $this->pagination = $request->pagination;
 
-        return  $this->success(new SubcategoryResource($subcategory));
+        $products = Product::query()
+            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status','sku')
+            ->where('sub_category_id',$id)
+            ->where('status','APPROVED')
+            ->where('is_visible',1)
+            ->where('is_motorbike',0)
+            ->paginate($this->pagination);
+
+        if($products->count() < 1) {
+            return response()->json([
+                    'status' => false,
+                    'errors' => 'Not Found',
+                    'message' => 'No product found with Sub Category ID: '.$id,
+            ],404);
+        }  
+
+        return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function productsByShop($id){
-        $shop = Shop::query()
-            ->with('products')
-            ->findOrFail($id);
+    public function productsByShop(Request $request, $id){
+        if($request->pagination) $this->pagination = $request->pagination;
 
-        return  $this->success(new ShopResource($shop));
+        $products = Product::query()
+            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status','sku')
+            ->where('shop_id',$id)
+            ->where('status','APPROVED')
+            ->where('is_visible',1)
+            ->where('is_motorbike',0)
+            ->paginate($this->pagination);
+        
+        if($products->count() < 1) {
+            return response()->json([
+                    'status' => false,
+                    'errors' => 'Not Found',
+                    'message' => 'No product found with Shop ID: '.$id,
+            ],404);
+        }  
+
+        return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
     public function models(Request $request){
         if($request->pagination) $this->pagination = $request->pagination;
 
         $model = BrandModel::query()
-            ->with('products')
+            ->with('catelogues','colors','specifications')
              ->paginate($this->pagination);
 
-        return  $this->success(BrandModelResource::collection($model)->response()->getData(true));
+        return $this->success(BrandModelResource::collection($model)->response()->getData(true));
     }
     
-    public function productsByModel($id){
-        $model = BrandModel::query()
-            ->with('products')
-            ->findOrFail($id);
+    public function productsByModel(Request $request, $id){
+        if($request->pagination) $this->pagination = $request->pagination;
 
-        return  $this->success(new BrandModelResource($model));
+        $products = Product::query()
+            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status','sku')
+            ->where('brand_model_id',$id)
+            ->where('status','APPROVED')
+            ->where('is_visible',1)
+            ->where('is_motorbike',0)
+            ->paginate($this->pagination);
+        
+        if($products->count() < 1) {
+            return response()->json([
+                'status' => false,
+                'errors' => 'Not Found',
+                'message' => 'No product found with Model ID: '.$id,
+            ],404);
+        }  
+
+        return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
     public function accessories(Request $request){

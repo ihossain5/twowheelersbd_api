@@ -20,11 +20,12 @@ class BrandModelResource extends JsonResource
             'description' => $this->info,
             'images' =>  addUrl(collect(json_decode($this->images))),
             'video' => $this->video,
-            'catelogue_pdf' => $this->catelogue_pdf,
+            'catelogue_pdf' => BASE_URL(). $this->catelogue_pdf,
             'catelogues' => BrandModelCatelogueResource::collection($this->catelogues),
             'colors' => BrandModelColorResource::collection($this->colors),
             'specifications' => BrandModelSpicificationResource::collection($this->specifications),
-            'products' => $this->when($request->routeIs('model.products') || $request->routeIs('all.models'), ProductResource::collection($this->products)),
+            'products' => $this->when($request->routeIs('model.products'), ProductResource::collection($this->products)),
+            'total_products' => $this->products->count(),
         ];
     }
 }
