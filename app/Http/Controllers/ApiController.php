@@ -55,33 +55,33 @@ class ApiController extends Controller
         return  $this->success (BrandCategoryResource::collection($brand_categories)->response()->getData(true));
     }
 
-    public function productsByCategory($id){
-        $category = Category::query()
-            ->with('products','subcategories')
-            ->findOrFail($id);
+    public function productsByCategory(Request $request, $id){
+        if($request->pagination) $this->pagination = $request->pagination;
 
-        $category->setRelation('products', $category->products()->paginate(1));
+        $sub_category_ids = SubCategory::query()->where('category_id',$id)->pluck('id');
 
-        return  $this->success(new CategoryResource($category));
+        $products = Product::query()
+                ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status','sku')
+                ->whereIn('sub_category_id',$sub_category_ids)
+                ->where('status','APPROVED')
+                ->where('is_visible',1)
+                ->where('is_motorbike',0)
+                ->paginate($this->pagination);
+
+        if($products->count() < 1) {
+            return $this->productErrorResponse($id, 'Category');
+        }
+
+        return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
     public function productsBySubCategory(Request $request, $id){
         if($request->pagination) $this->pagination = $request->pagination;
 
-        $products = Product::query()
-            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status','sku')
-            ->where('sub_category_id',$id)
-            ->where('status','APPROVED')
-            ->where('is_visible',1)
-            ->where('is_motorbike',0)
-            ->paginate($this->pagination);
+        $products = $this->productQuery($id, 'sub_category_id', $this->pagination); 
 
         if($products->count() < 1) {
-            return response()->json([
-                    'status' => false,
-                    'errors' => 'Not Found',
-                    'message' => 'No product found with Sub Category ID: '.$id,
-            ],404);
+            return $this->productErrorResponse($id, 'Sub Category');
         }  
 
         return $this->success(ProductResource::collection($products)->response()->getData(true));
@@ -90,20 +90,10 @@ class ApiController extends Controller
     public function productsByShop(Request $request, $id){
         if($request->pagination) $this->pagination = $request->pagination;
 
-        $products = Product::query()
-            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status','sku')
-            ->where('shop_id',$id)
-            ->where('status','APPROVED')
-            ->where('is_visible',1)
-            ->where('is_motorbike',0)
-            ->paginate($this->pagination);
+        $products = $this->productQuery($id, 'shop_id', $this->pagination);
         
         if($products->count() < 1) {
-            return response()->json([
-                    'status' => false,
-                    'errors' => 'Not Found',
-                    'message' => 'No product found with Shop ID: '.$id,
-            ],404);
+            return $this->productErrorResponse($id, 'Shop');
         }  
 
         return $this->success(ProductResource::collection($products)->response()->getData(true));
@@ -121,20 +111,10 @@ class ApiController extends Controller
     public function productsByModel(Request $request, $id){
         if($request->pagination) $this->pagination = $request->pagination;
 
-        $products = Product::query()
-            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status','sku')
-            ->where('brand_model_id',$id)
-            ->where('status','APPROVED')
-            ->where('is_visible',1)
-            ->where('is_motorbike',0)
-            ->paginate($this->pagination);
+        $products = $this->productQuery($id, 'brand_model_id', $this->pagination);
         
         if($products->count() < 1) {
-            return response()->json([
-                'status' => false,
-                'errors' => 'Not Found',
-                'message' => 'No product found with Model ID: '.$id,
-            ],404);
+            return $this->productErrorResponse($id, 'Model');
         }  
 
         return $this->success(ProductResource::collection($products)->response()->getData(true));
@@ -177,5 +157,23 @@ class ApiController extends Controller
              ->findOrFail($id);
 
         return  $this->success(new MotorbikeResource($motorbikes));
+    }
+
+    private function productQuery($id, $column_name, $pagination){
+       return Product::query()
+            ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status','sku')
+            ->where($column_name,$id)
+            ->where('status','APPROVED')
+            ->where('is_visible',1)
+            ->where('is_motorbike',0)
+            ->paginate($pagination);
+    }
+
+    private function productErrorResponse($id, $name){
+        return response()->json([
+            'status' => false,
+            'errors' => 'Not Found',
+            'message' => 'No product found with '. $name. ' ID: '.$id,
+       ],404);
     }
 }
