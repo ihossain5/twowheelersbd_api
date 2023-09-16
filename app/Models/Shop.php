@@ -38,4 +38,8 @@ class Shop extends Model
     public function hotDeals(){
         return $this->hasMany(HotDeal::class)->where('status',1);
     }
+
+    public function videos(){
+        return $this->hasMany(ShopVideo::class)->where('status',1);
+    }
 }

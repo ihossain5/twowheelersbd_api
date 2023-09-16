@@ -19,5 +19,13 @@ class Controller extends BaseController
         ];
     }
 
+    public function errorResponse($id, $name){
+        return response()->json([
+            'status' => false,
+            'errors' => 'Not Found',
+            'message' => 'No data found with '. $name. ' ID: '.$id,
+       ],404);
+    }
+
     
 }
