@@ -30,4 +30,12 @@ class Shop extends Model
     public function products(){
         return $this->hasMany(Product::class)->where('is_motorbike',0)->where('status','APPROVED')->where('is_visible',1);
     }
+
+    public function reviews(){
+        return $this->hasMany(ShopReview::class)->where('status',1);
+    }
+
+    public function hotDeals(){
+        return $this->hasMany(HotDeal::class)->where('status',1);
+    }
 }

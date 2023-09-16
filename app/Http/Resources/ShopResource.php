@@ -24,6 +24,10 @@ class ShopResource extends JsonResource
             'owner_name' => $this->owner->name,
             'delivery_charge' => $this->delivery_charge,
             'commission_rate' => $this->commission_rate,
+            'rating' => $this->average_rating,
+
+            'hotdeals' => $this->when($request->routeIs('shop.details'), HotDealResource::collection($this->hotDeals)),
+
             'products' => $this->when($request->routeIs('shop.products'), ProductResource::collection($this->products)),
         ];
     }

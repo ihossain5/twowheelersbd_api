@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShopController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,12 @@ Route::controller(HomeController::class)
     Route::get('/brands', 'brands');
     Route::get('/shops', 'shops');
     Route::get('/blogs', 'blogs');
+});
+
+Route::controller(ShopController::class)
+->group(function () {
+    Route::get('/shop-hot-deals', 'shopHotdeals');
+    Route::get('/single-shop/{id}/details', 'singleShop')->name('shop.details');
 });
 
 Route::controller(ApiController::class)
