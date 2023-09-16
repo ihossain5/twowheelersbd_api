@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,21 @@ Route::controller(HomeController::class)
 });
 
 Route::controller(ApiController::class)
+->group(function () {
+    Route::get('/products', 'products')->name('products');
+    Route::get('/products/{id}/details', 'getProductById');
+    Route::get('/brand-categories', 'brandCategories');
+    Route::get('/category/{id}/products', 'productsByCategory');
+    Route::get('/sub-category/{id}/products', 'productsBySubCategory')->name('subcategory.products');
+    Route::get('/shop/{id}/products', 'productsByShop')->name('shop.products');
+    Route::get('/model/{id}/products', 'productsByModel')->name('model.products');
+    Route::get('/models', 'models')->name('all.models');
+    Route::get('/accessories', 'accessories')->name('all.accessories');
+    Route::get('/motorbikes', 'motorbikes')->name('all.motorbikes');
+    Route::get('/motorbikes/{id}/details', 'motorbikeDetails')->name('motorbikes.details');
+});
+
+Route::controller(ProductController::class)
 ->group(function () {
     Route::get('/products', 'products')->name('products');
     Route::get('/products/{id}/details', 'getProductById');
