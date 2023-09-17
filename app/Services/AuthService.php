@@ -7,6 +7,7 @@ use App\Http\Controllers\Utility\Utils;
 use App\Models\ShopOwner;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class AuthService
@@ -34,6 +35,7 @@ class AuthService
             $data->slug = Str::slug($request_data['name']);
             $data->mobile = $request_data['mobile'];
             $data->password = $request_data['password'];
+            $data->status = 'Pending';
             $data->otp = $otp;
             $data->otp_expires_time = $exprireTime;
             $data->save();
@@ -48,9 +50,11 @@ class AuthService
             $data->save();
         }
 
-        $sms = Utils::sendSms($request_data['mobile'],'Your otp code is '. $otp);
+        // $sms = Utils::sendSms($request_data['mobile'],'Your otp code is '. $otp);
 
-        return $data;
+        $token = Auth::guard($type)->login($data);
+
+        return $this->respondWithToken($token,$type);
     }
 
     protected function respondWithToken($token, $type)

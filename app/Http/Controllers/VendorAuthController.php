@@ -19,6 +19,11 @@ class VendorAuthController extends Controller
 
     public function login(Request $request)
     {
+        $request->validate([
+            'mobile' => 'required',
+            'password' => 'required',
+        ]);
+
         return $this->success(new UserResource($this->auth->login($request->all(),'vendor')));
     }   
     
@@ -30,9 +35,9 @@ class VendorAuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-       $data =   $this->auth->register($request->all(),'vendor');
+        return $this->success(new UserResource($this->auth->register($request->all(),'vendor')));
 
-        return $this->success('Successfully registered! Please verify your account by providing otp. Vendor Id is '.$data->id);
+        // return $this->success('Successfully registered! Please verify your account by providing otp. Vendor Id is '.$data->id);
     }
 
     public function verifyOtp(Request $request){

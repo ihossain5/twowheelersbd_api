@@ -75,7 +75,7 @@ class Handler extends ExceptionHandler
         } 
         elseif ($e instanceof JWTException) {
 
-           return $this->errorResponse($e,'Token not parsed', 401);
+           return $this->errorResponse($e,'Token not provided', 401);
         } elseif ($e instanceof InvalidAuthenticateException) {
 
            return $this->errorResponse($e,'Number or Password is incorrect', 401);

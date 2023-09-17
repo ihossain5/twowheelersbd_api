@@ -15,8 +15,10 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'access_token' => $this->when($request->routeIs('user.login') || $request->routeIs('vendor.login') | $request->routeIs('vendor.otp.verify')  , $this->token),
-            'token_type' => $this->when($request->routeIs('user.login') || $request->routeIs('vendor.login') | $request->routeIs('vendor.otp.verify')  ,$this->token_type),
+            // 'access_token' => $this->when($request->routeIs('user.login') || $request->routeIs('vendor.login') | $request->routeIs('vendor.otp.verify')  , $this->token),
+            // 'token_type' => $this->when($request->routeIs('user.login') || $request->routeIs('vendor.login') | $request->routeIs('vendor.otp.verify')  ,$this->token_type),
+            'access_token' => $this->token,
+            'token_type' => $this->token_type,
             'name' => $this->name,
             'photo' => $this->photo,
             'mobile' => $this->mobile,

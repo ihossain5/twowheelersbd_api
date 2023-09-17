@@ -26,4 +26,8 @@ class ShopOwner extends Model implements JWTSubject, AuthenticatableContract
     {
         return [];
     }
+
+    public function shop(){
+        return $this->hasOne(Shop::class);
+    }
 }
