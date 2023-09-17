@@ -20,6 +20,8 @@ Route::controller(VendorAuthController::class)
 ->group(function () {
     Route::post('/login', 'login')->name('vendor.login');
     Route::post('/logout', 'logout')->name('vendor.logout');
+    Route::post('/register', 'register')->name('vendor.register');
+    Route::post('/verify-otp', 'verifyOtp')->name('vendor.otp.verify');
     // Route::post('/refresh', 'refresh');
     Route::post('/me', 'getProfile')->middleware('auth.jwt')->name('vendor.profile');
 

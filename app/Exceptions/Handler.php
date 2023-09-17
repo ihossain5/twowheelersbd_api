@@ -6,6 +6,7 @@ use BadMethodCallException;
 use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -78,6 +79,13 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof InvalidAuthenticateException) {
 
            return $this->errorResponse($e,'Number or Password is incorrect', 401);
+        } elseif ($e instanceof ValidationException) {
+
+           return $this->errorResponse($e,$e->validator->getMessageBag(), 422);
+        }  
+        elseif ($e instanceof InvalidOtpException) {
+
+           return $this->errorResponse($e, 'Invalid Otp. Please provide valid otp', 401);
         } 
         else {
            return $this->errorResponse($e);
