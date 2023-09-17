@@ -6,7 +6,7 @@ use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 
-class AuthController extends Controller
+class VendorAuthController extends Controller
 {
     public $auth;
 
@@ -16,7 +16,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        return $this->success(new UserResource($this->auth->login($request->all())));
+        return $this->success(new UserResource($this->auth->login($request->all(),'vendor')));
     }
 
     /**
@@ -26,7 +26,7 @@ class AuthController extends Controller
      */
     public function getProfile()
     {
-        return $this->success(new UserResource(auth()->user()));
+        return $this->success(new UserResource(auth('vendor')->user()));
     }
 
     /**
@@ -36,10 +36,8 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        auth('vendor')->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
     }
-
-
 }

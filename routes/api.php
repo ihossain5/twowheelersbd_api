@@ -28,10 +28,10 @@ Route::controller(AuthController::class)
 ->prefix('auth')
 ->middleware('api')
 ->group(function () {
-    Route::post('/login', 'login');
-    Route::post('/logout', 'logout');
-    Route::post('/refresh', 'refresh');
-    Route::post('/me', 'me')->middleware('auth.jwt');
+    Route::post('/login', 'login')->name('user.login');
+    Route::post('/logout', 'logout')->name('user.logout');
+    // Route::post('/refresh', 'refresh');
+    Route::post('/me', 'getProfile')->middleware('auth.jwt')->name('user.profile');
 
 
 });
