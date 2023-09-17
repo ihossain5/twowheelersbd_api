@@ -57,6 +57,24 @@ class AuthService
         return $this->respondWithToken($token,$type);
     }
 
+    public function forgotPassword($type,$mobile){
+        $exprireTime = Carbon::now()->addMinute(5);
+        $otp = generateOtp();
+
+        if ($type != null) {
+            $data =  ShopOwner::query()->where('mobile',$mobile)->first();
+            $data->otp = $otp;
+            $data->otp_expires_time = $exprireTime;
+        }else{
+            $data = User::query()->where('mobile',$mobile)->first();
+            $data->otp_code = $otp;
+            $data->otp_expire_time = $exprireTime;
+        }
+        $data->save();
+
+        return $data;
+    }
+
     protected function respondWithToken($token, $type)
     {
 

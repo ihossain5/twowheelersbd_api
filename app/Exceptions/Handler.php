@@ -88,7 +88,7 @@ class Handler extends ExceptionHandler
            return $this->errorResponse($e, 'Invalid Otp. Please provide valid otp', 401);
         } 
         else {
-           return $this->errorResponse($e);
+           return $this->errorResponse($e, $e->getFile(). $e->getLine());
         }
     }
 

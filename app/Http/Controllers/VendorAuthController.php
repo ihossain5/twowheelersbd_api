@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\InvalidOtpException;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\VendorResource;
 use App\Models\ShopOwner;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class VendorAuthController extends Controller
             'password' => 'required',
         ]);
 
-        return $this->success(new UserResource($this->auth->login($request->all(),'vendor')));
+        return $this->success(new VendorResource($this->auth->login($request->all(),'vendor')));
     }   
     
     public function register(Request $request)
@@ -35,9 +36,19 @@ class VendorAuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        return $this->success(new UserResource($this->auth->register($request->all(),'vendor')));
+        return $this->success(new VendorResource($this->auth->register($request->all(),'vendor')));
 
         // return $this->success('Successfully registered! Please verify your account by providing otp. Vendor Id is '.$data->id);
+    }
+
+    public function forgetPassword(Request $request){
+        $request->validate([
+            'mobile' => 'required|exists:shop_owners,mobile',
+        ]);
+
+        $data = $this->auth->forgotPassword('vendor',$request->mobile);
+
+        return $this->success('Otp has sent to given number. Vendor Id is '.$data->id);
     }
 
     public function verifyOtp(Request $request){
@@ -51,12 +62,31 @@ class VendorAuthController extends Controller
             throw new InvalidOtpException('Otp mismatch');
         }
 
+        return $this->success('Successfully otp verified! vendor ID: '.$vendor->id);
+
+        // $token = Auth::guard('vendor')->login($vendor);
+
+        // $vendor->token = $token;
+        // $vendor->token_type = 'bearer';
+
+        // return $this->success(new VendorResource($vendor));
+    }
+
+    public function recoverPassword(Request $request){
+        $request->validate([
+            'id' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $vendor = ShopOwner::findOrFail($request->id);
+
+        $vendor->password = $request->password;
+        $vendor->save();
+
         $token = Auth::guard('vendor')->login($vendor);
-
         $vendor->token = $token;
-        $vendor->token_type = 'bearer';
 
-        return $this->success(new UserResource($vendor));
+        return $this->success(new VendorResource($vendor));
     }
 
 
@@ -67,7 +97,7 @@ class VendorAuthController extends Controller
      */
     public function getProfile()
     {
-        return $this->success(new UserResource(auth('vendor')->user()));
+        return $this->success(new VendorResource(auth('vendor')->user()));
     }
 
     /**

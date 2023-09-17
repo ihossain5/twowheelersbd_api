@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class ShopOwner extends Model implements JWTSubject, AuthenticatableContract
 {
@@ -29,5 +30,12 @@ class ShopOwner extends Model implements JWTSubject, AuthenticatableContract
 
     public function shop(){
         return $this->hasOne(Shop::class);
+    }
+
+    protected function photo(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => BASE_URL() . $value ,
+        );
     }
 }

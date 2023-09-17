@@ -23,8 +23,10 @@ Route::controller(VendorAuthController::class)
     Route::post('/logout', 'logout')->name('vendor.logout');
     Route::post('/register', 'register')->name('vendor.register');
     Route::post('/verify-otp', 'verifyOtp')->name('vendor.otp.verify');
+    Route::post('/forget-password', 'forgetPassword')->name('vendor.forget.password');
+    Route::post('/recover-password', 'recoverPassword')->name('vendor.recover.password');
     // Route::post('/refresh', 'refresh');
-    Route::post('/me', 'getProfile')->middleware('auth.jwt')->name('vendor.profile');
+    Route::post('/profile', 'getProfile')->middleware('auth.jwt')->name('vendor.profile');
 
 
 });
