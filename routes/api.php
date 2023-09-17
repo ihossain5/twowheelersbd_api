@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
@@ -20,6 +21,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+
+Route::controller(AuthController::class)
+->prefix('auth')
+->middleware('api')
+->group(function () {
+    Route::post('/login', 'login');
+    Route::post('/logout', 'logout');
+    Route::post('/refresh', 'refresh');
+    Route::post('/me', 'me');
+
+
 });
 
 Route::controller(HomeController::class)
