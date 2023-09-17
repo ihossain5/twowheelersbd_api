@@ -11,6 +11,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
 use Symfony\Component\HttpFoundation\Response;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class Handler extends ExceptionHandler
 {
@@ -60,6 +63,18 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof BadMethodCallException) {
 
            return $this->errorResponse($e,'Method does not exist',Response::HTTP_BAD_REQUEST);
+           
+        } elseif ($e instanceof TokenInvalidException ) {
+
+           return $this->errorResponse($e,'Invalid Token', 401);
+
+        } elseif ($e instanceof TokenExpiredException) {
+
+           return $this->errorResponse($e,'Token has Expired', 401);
+        } 
+        elseif ($e instanceof JWTException) {
+
+           return $this->errorResponse($e,'Token not parsed', 401);
         } 
         else {
            return $this->errorResponse($e);
