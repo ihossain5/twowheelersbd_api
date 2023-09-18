@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\OrderStatus;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -34,5 +35,36 @@ class OrderController extends Controller
         ->where('shop_id',$this->shop_id)
         ->where('status',$status)
         ->count();
+    }
+
+    public function allOrders(Request $request){
+        if($request->pagination) $this->pagination = $request->pagination;
+
+        $orders = Order::query()
+        ->where('shop_id',$this->shop_id);
+
+        if($orders->count() < 1){
+            return $this->errorResponse(null,'Shop');
+        }
+
+        $orders =  $orders->paginate($this->pagination);
+
+        return $this->success(OrderResource::collection($orders)->response()->getData(true));
+    }
+
+    public function pendingOrders(Request $request){
+        if($request->pagination) $this->pagination = $request->pagination;
+
+        $orders = Order::query()
+        ->where('shop_id',$this->shop_id)
+        ->where('status',OrderStatus::PROCESSING);
+
+        if($orders->count() < 1){
+            return $this->errorResponse(null,'Shop');
+        }
+
+        $orders =  $orders->paginate($this->pagination);
+
+        return $this->success(OrderResource::collection($orders)->response()->getData(true));
     }
 }

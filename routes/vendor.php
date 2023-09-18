@@ -17,7 +17,9 @@ Route::controller(VendorController::class)
 Route::controller(OrderController::class)
 ->middleware('auth.jwt')
 ->group(function () {
+    Route::get('/all-orders', 'allOrders')->name('vendor.all.order');
     Route::get('/total-orders', 'totalOrders')->name('vendor.total.order');
+    Route::get('/pending-orders', 'pendingOrders')->name('vendor.pending.order');
 });
 
 
