@@ -20,6 +20,7 @@ Route::controller(OrderController::class)
     Route::get('/all-orders', 'allOrders')->name('vendor.all.order');
     Route::get('/total-orders', 'totalOrders')->name('vendor.total.order');
     Route::get('/pending-orders', 'pendingOrders')->name('vendor.pending.order');
+    Route::get('/orders/details/{id}', 'orderDetails')->name('vendor.details.order');
 });
 
 

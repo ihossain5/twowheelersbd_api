@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\OrderStatus;
+use App\Http\Resources\OrderDetailResource;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -76,5 +77,11 @@ class OrderController extends Controller
         $orders =  $orders->paginate($this->pagination);
 
         return $this->success(OrderResource::collection($orders)->response()->getData(true));
+    }
+
+    public function orderDetails($id){
+        $order = Order::with('items','items.product','user.address')->findOrFail($id);
+
+        return $this->success(new OrderDetailResource($order));
     }
 }
