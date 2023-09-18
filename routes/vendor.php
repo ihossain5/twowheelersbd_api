@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\VendorAuthController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,11 @@ Route::controller(VendorController::class)
     Route::get('/shop/videos', 'shopVideos')->name('vendor.shop.videos');
     Route::get('/shop/deals', 'shopDeals')->name('vendor.shop.deals');
     Route::get('/shop-deals/{id}/products', 'dealsProducts')->name('vendor.shop.deals.products');
+});
+Route::controller(OrderController::class)
+->middleware('auth.jwt')
+->group(function () {
+    Route::get('/total-orders', 'totalOrders')->name('vendor.total.order');
 });
 
 
