@@ -38,10 +38,17 @@ class OrderController extends Controller
     }
 
     public function allOrders(Request $request){
+        // dd($request->all());
         if($request->pagination) $this->pagination = $request->pagination;
 
         $orders = Order::query()
-        ->where('shop_id',$this->shop_id);
+        ->where('shop_id',$this->shop_id)
+        ->when(!empty($request->status), function ($query) use($request){
+            $query->where('status',$request->status);
+        })
+        ->when(!empty($request->search), function ($query) use($request){
+            $query->where('order_id', 'like', '%'.$request->search.'%');
+        });
 
         if($orders->count() < 1){
             return $this->errorResponse(null,'Shop');
@@ -57,7 +64,10 @@ class OrderController extends Controller
 
         $orders = Order::query()
         ->where('shop_id',$this->shop_id)
-        ->where('status',OrderStatus::PROCESSING);
+        ->where('status',OrderStatus::PROCESSING)
+        ->when(!empty($request->search), function ($query) use($request){
+            $query->where('order_id', 'like', '%'.$request->search.'%');
+        });
 
         if($orders->count() < 1){
             return $this->errorResponse(null,'Shop');
