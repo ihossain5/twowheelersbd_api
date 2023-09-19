@@ -10,6 +10,7 @@ use App\Models\HotDeal;
 use App\Models\HotDealProduct;
 use App\Models\Shop;
 use App\Models\ShopVideo;
+use App\Services\ImageUoloadService;
 use App\Services\ProductService;
 use App\Services\VideoService;
 use Illuminate\Http\Request;
@@ -76,6 +77,16 @@ class VendorController extends Controller
         $video = ShopVideo::findOrFail($id);
 
         return $this->success(new VideoResource($video));
+    }
+
+    public function shopVideoDelete($id){
+        $video = ShopVideo::findOrFail($id);
+
+        ( new ImageUoloadService())->deleteImage($video->preview_image);
+
+        $video->delete();
+        
+        return $this->success('Video has deleted');
     }
 
     public function shopDeals(Request $request){

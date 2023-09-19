@@ -14,6 +14,7 @@ Route::controller(VendorController::class)
     Route::post('/shop/video/create', 'shopVideoCreate')->name('vendor.shop.video.create');
     Route::get('/shop/video/edit/{id}', 'shopVideoEdit')->name('vendor.shop.video.edit');
     Route::post('/shop/video/update/{id}', 'shopVideoUpdate')->name('vendor.shop.video.update');
+    Route::delete('/shop/video/delete/{id}', 'shopVideoDelete')->name('vendor.shop.video.delete');
     Route::get('/shop/deals', 'shopDeals')->name('vendor.shop.deals');
     Route::get('/shop-deals/{id}/products', 'dealsProducts')->name('vendor.shop.deals.products');
 });

@@ -28,11 +28,11 @@ class ImageUoloadService
     // delete image
     function deleteImage($image)
     {
-        File::delete($this->url . $image);
+        File::delete($image);
     }
     function deleteFile($file)
     {
-        File::delete($this->url . $file);
+        File::delete($file);
     }
 
     // store pdf
