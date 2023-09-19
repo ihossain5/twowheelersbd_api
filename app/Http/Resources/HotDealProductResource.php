@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class HotDealResource extends JsonResource
+class HotDealProductResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,11 @@ class HotDealResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'banner' => $this->banner,
-            'shop_name' => $this->shop->name,
-            'shop_logo' => $this->shop->logo,
-            'products' => $this->when($request->routeIs('vendor.edit.deal'), HotDealProductResource::collection($this->products)),
+            'hot_deal_id' => $this->hot_deal_id,
+            'product_name' => $this->product->name,
+            'regular_price' => $this->product->regular_price,
+            'percentage' => $this->percentage,
+            'discounted_price' => $this->discounted_price,
         ];
     }
 }

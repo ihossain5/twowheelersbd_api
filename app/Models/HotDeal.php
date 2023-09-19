@@ -20,4 +20,8 @@ class HotDeal extends Model
             get: fn ($value) => BASE_URL() . $value,
         );
     }
+
+    public function products(){
+        return $this->hasMany(HotDealProduct::class);
+    }
 }

@@ -135,4 +135,9 @@ class VendorController extends Controller
         return $this->success(new HotDealResource($hot_deal));
 
     }
+
+    public function editDeal($id){
+        $hot_deal = HotDeal::with('products:id,hot_deal_id,product_id,percentage,discounted_price')->findOrFail($id);
+        return $this->success(new HotDealResource($hot_deal));
+    }
 }

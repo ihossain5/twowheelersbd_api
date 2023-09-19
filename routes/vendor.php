@@ -18,6 +18,7 @@ Route::controller(VendorController::class)
     Route::get('/shop/deals', 'shopDeals')->name('vendor.shop.deals');
     Route::get('/shop-deals/{id}/products', 'dealsProducts')->name('vendor.shop.deals.products');
     Route::post('/shop-deals/create', 'createDeal');
+    Route::get('/shop-deals/edit/{id}', 'editDeal')->name('vendor.edit.deal');
 });
 Route::controller(OrderController::class)
 ->middleware('auth.jwt')
