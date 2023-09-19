@@ -11,6 +11,7 @@ Route::controller(VendorController::class)
 ->group(function () {
     Route::get('/shop/details', 'shopDetails')->name('vendor.shop.details');
     Route::get('/shop/videos', 'shopVideos')->name('vendor.shop.videos');
+    Route::post('/shop/video/create', 'shopVideoCreate')->name('vendor.shop.video.create');
     Route::get('/shop/deals', 'shopDeals')->name('vendor.shop.deals');
     Route::get('/shop-deals/{id}/products', 'dealsProducts')->name('vendor.shop.deals.products');
 });

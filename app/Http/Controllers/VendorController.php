@@ -11,6 +11,7 @@ use App\Models\HotDealProduct;
 use App\Models\Shop;
 use App\Models\ShopVideo;
 use App\Services\ProductService;
+use App\Services\VideoService;
 use Illuminate\Http\Request;
 
 class VendorController extends Controller
@@ -42,10 +43,27 @@ class VendorController extends Controller
         return $this->success(VideoResource::collection($videos)->response()->getData(true));
     }
 
+    public function shopVideoCreate(Request $request, VideoService $videoService){
+        $request->validate([
+            'preview_image' => 'required|image|max:1024|mimes:jpg,jpeg,png',
+            'link' => 'required|string',
+            'status' => 'required|boolean',
+        ]);
+
+        $video = $videoService->store($request->all(), $this->shop_id);
+
+        return $this->success(new VideoResource($video));
+
+    }
+
     public function shopDeals(Request $request){
         if($request->pagination) $this->pagination = $request->pagination;
 
-        $deals = HotDeal::query()->where('shop_id',$this->shop_id); 
+        $deals = HotDeal::query()
+        ->where('shop_id',$this->shop_id)
+        ->when(!empty($request->search), function ($query) use($request){
+            $query->where('title', 'like', '%'.$request->search.'%');
+        });
 
         if($deals->count() < 1){
             return $this->errorResponse(null,'Shop');

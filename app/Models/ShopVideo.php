@@ -13,7 +13,7 @@ class ShopVideo extends Model
     protected function previewImage(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => BASE_URL() . $value,
+            get: fn ($value) => BASE_URL() . $value,
         );
     }
 }
