@@ -56,6 +56,28 @@ class VendorController extends Controller
 
     }
 
+    public function shopVideoUpdate(Request $request, VideoService $videoService, $id){
+        // dd($request->all());
+        $request->validate([
+            'preview_image' => 'image|max:1024|mimes:jpg,jpeg,png',
+            'link' => 'required|string',
+            'status' => 'required|boolean',
+        ]);
+
+        $video = ShopVideo::findOrFail($id);
+
+        $video = $videoService->store($request->all(), $this->shop_id ,$video);
+
+        return $this->success(new VideoResource($video));
+
+    }
+
+    public function shopVideoEdit($id){
+        $video = ShopVideo::findOrFail($id);
+
+        return $this->success(new VideoResource($video));
+    }
+
     public function shopDeals(Request $request){
         if($request->pagination) $this->pagination = $request->pagination;
 
