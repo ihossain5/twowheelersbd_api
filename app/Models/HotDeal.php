@@ -17,7 +17,7 @@ class HotDeal extends Model
     protected function banner(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => BASE_URL() . $value,
+            get: fn ($value) => BASE_URL() . $value,
         );
     }
 }

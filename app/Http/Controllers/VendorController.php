@@ -10,6 +10,7 @@ use App\Models\HotDeal;
 use App\Models\HotDealProduct;
 use App\Models\Shop;
 use App\Models\ShopVideo;
+use App\Services\HotDealService;
 use App\Services\ImageUoloadService;
 use App\Services\ProductService;
 use App\Services\VideoService;
@@ -118,5 +119,20 @@ class VendorController extends Controller
         $products =  $products->paginate($this->pagination);
        
         return $this->success(ProductResource::collection($products)->response()->getData(true));
+    }
+
+    public function createDeal(Request $request, HotDealService $hotDealService){
+        // dd($request->all());
+        $this->validate($request,[
+            'title' => 'required',
+            'banner' => 'required|mimes:jpg,jpeg,png',
+            'products' => 'required',
+            'products.*.id' => 'required|unique:hot_deal_products,product_id',
+            'products.*.percentage' => 'required',
+        ]);
+        $hot_deal = $hotDealService->store($request->all(), $this->shop_id);
+
+        return $this->success(new HotDealResource($hot_deal));
+
     }
 }

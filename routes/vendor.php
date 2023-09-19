@@ -17,6 +17,7 @@ Route::controller(VendorController::class)
     Route::delete('/shop/video/delete/{id}', 'shopVideoDelete')->name('vendor.shop.video.delete');
     Route::get('/shop/deals', 'shopDeals')->name('vendor.shop.deals');
     Route::get('/shop-deals/{id}/products', 'dealsProducts')->name('vendor.shop.deals.products');
+    Route::post('/shop-deals/create', 'createDeal');
 });
 Route::controller(OrderController::class)
 ->middleware('auth.jwt')
