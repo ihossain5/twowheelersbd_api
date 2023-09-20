@@ -39,6 +39,27 @@ class HotDealService {
             if(array_key_exists('products',$data)){
                 $this->saveHotDealProduct($data, $hot_deal);
             }
+
+            if(array_key_exists('old_products',$data)){
+                foreach (json_decode($data['old_products']) as $old_product){
+                  $existing_product = Product::findOrFail($old_product->product_id);
+      
+                  $old_product_deal = HotDealProduct::find($old_product->hot_deal_product_id);
+                  $old_product_deal->hot_deal_id = $hot_deal->id;
+                  $old_product_deal->product_id = $old_product->product_id;
+                  $old_product_deal->percentage = $old_product->percentage;
+                  $old_product_deal->discounted_price = $old_product->discounted_price;
+                  $old_product_deal->old_discount_type = $existing_product->discount_type;
+                  $old_product_deal->old_discount = $existing_product->discount;
+                  $old_product_deal->old_regular_price = $existing_product->regular_price;
+                  $old_product_deal->old_discounted_price = $existing_product->discounted_price;
+                  $old_product_deal->old_selling_price = $existing_product->selling_price;
+                  $old_product_deal->save();
+      
+                  $this->setPrice($old_product->product_id, $old_product->discounted_price, $old_product->percentage);
+                }
+              }
+
         });
     
 

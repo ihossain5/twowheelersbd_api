@@ -140,4 +140,18 @@ class VendorController extends Controller
         $hot_deal = HotDeal::with('products:id,hot_deal_id,product_id,percentage,discounted_price')->findOrFail($id);
         return $this->success(new HotDealResource($hot_deal));
     }
+
+    public function updateDeal($id, Request $request,HotDealService $hotDealService){
+        // dd($request->all());
+        $this->validate($request,[
+            'title' => 'required',
+            'banner' => 'mimes:jpg,jpeg,png',
+            'old_products' => 'required',
+        ]);
+        $deal = HotDeal::findOrFail($id);
+
+        $hot_deal = $hotDealService->store($request->all(), $this->shop_id, $deal);
+
+        return $this->success(new HotDealResource($hot_deal));
+    }
 }
