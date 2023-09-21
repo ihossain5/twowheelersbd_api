@@ -6,7 +6,7 @@ use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(VendorController::class)
-    ->middleware('auth.jwt')
+    ->middleware('auth.jwt','shop')
     ->group(function () {
         Route::post('/shop/create-or-update', 'shopCreate');
         Route::get('/shop/details', 'shopDetails')->name('vendor.shop.details');
@@ -23,7 +23,7 @@ Route::controller(VendorController::class)
         Route::delete('/shop-deals/delete/{id}', 'deleteDeal');
     });
 Route::controller(OrderController::class)
-    ->middleware('auth.jwt')
+    ->middleware('auth.jwt','shop')
     ->group(function () {
         Route::get('/all-orders', 'allOrders')->name('vendor.all.order');
         Route::get('/total-orders', 'totalOrders')->name('vendor.total.order');
