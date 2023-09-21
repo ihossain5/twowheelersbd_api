@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\InvalidOtpException;
+use App\Http\Requests\PasswordChangeRequest;
 use App\Http\Resources\VendorResource;
 use App\Models\ShopOwner;
 use App\Services\AuthService;
@@ -143,5 +144,16 @@ class VendorAuthController extends Controller
         auth('vendor')->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    public function passwordChange(PasswordChangeRequest $request){
+        $vendor = auth('vendor')->user();
+        $vendor->password = $request->new_password;
+        $vendor->save();
+
+        auth('vendor')->logout();
+
+        return $this->success('Password has been changed. Please login again');
+
     }
 }
