@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(VendorController::class)
     ->middleware('auth.jwt')
     ->group(function () {
+        Route::post('/shop/create-or-update', 'shopCreate');
         Route::get('/shop/details', 'shopDetails')->name('vendor.shop.details');
         Route::get('/shop/videos', 'shopVideos')->name('vendor.shop.videos');
         Route::post('/shop/video/create', 'shopVideoCreate')->name('vendor.shop.video.create');

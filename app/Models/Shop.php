@@ -10,6 +10,8 @@ class Shop extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['shop_owner_id','name','slug','discription','division','logo','photo'];
+
     protected function logo(): Attribute
     {
         return Attribute::make(
