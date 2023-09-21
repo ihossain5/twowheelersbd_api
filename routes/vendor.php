@@ -21,6 +21,11 @@ Route::controller(VendorController::class)
         Route::get('/shop-deals/edit/{id}', 'editDeal')->name('vendor.edit.deal');
         Route::post('/shop-deals/update/{id}', 'updateDeal');
         Route::delete('/shop-deals/delete/{id}', 'deleteDeal');
+        Route::get('/shop/coupons', 'shopCoupons')->name('vendor.shop.coupon');
+        Route::post('/shop/coupons/create', 'createCoupon')->name('vendor.shop.create');
+        Route::get('/shop/coupons/edit/{id}', 'editCoupon')->name('vendor.shop.edit');
+        Route::post('/shop/coupons/update/{id}', 'updateCoupon')->name('vendor.shop.update');
+        Route::delete('/shop/coupons/delete/{id}', 'deleteCoupon')->name('vendor.shop.update');
     });
 Route::controller(OrderController::class)
     ->middleware('auth.jwt','shop')

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CouponRequest;
 use App\Http\Requests\ShopRequest;
+use App\Http\Resources\CouponResource;
 use App\Http\Resources\HotDealResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ShopResource;
 use App\Http\Resources\VideoResource;
+use App\Models\Coupon;
 use App\Models\HotDeal;
 use App\Models\HotDealProduct;
 use App\Models\Shop;
@@ -213,5 +216,46 @@ class VendorController extends Controller {
         $hotDealService->delete($id);
 
         return $this->success('Item has deleted');
+    }
+
+    public function shopCoupons(Request $request){
+        $coupons = Coupon::query()->where('shop_id', $this->shop_id);
+
+        if ($request->pagination) {
+            $this->pagination = $request->pagination;
+        }
+
+        if ($coupons->count() < 1) {
+            return $this->errorResponse($this->shop_id, 'Shop');
+        }
+        $coupons = $coupons->paginate($this->pagination);
+
+        return $this->success(CouponResource::collection($coupons)->response()->getData(true));
+    }
+
+    public function createCoupon(CouponRequest $request){
+        $coupon = Coupon::create(array_merge($request->validated(), [
+            'shop_id' => $this->shop_id,
+        ]));
+
+        return $this->success(new CouponResource($coupon));
+    }
+
+    public function editCoupon($id){
+        $coupon = Coupon::findOrFail($id);
+
+        return $this->success(new CouponResource($coupon));
+    }
+    public function updateCoupon($id, CouponRequest $request){
+        $coupon = Coupon::findOrFail($id);
+
+        $coupon->update($request->validated());
+
+        return $this->success(new CouponResource($coupon));
+    }
+    public function deleteCoupon($id){
+        $coupon = Coupon::findOrFail($id)->delete();
+
+        return $this->success('coupon has deleted');
     }
 }
