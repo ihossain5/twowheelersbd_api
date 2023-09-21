@@ -137,7 +137,8 @@ class VendorController extends Controller
     }
 
     public function editDeal($id){
-        $hot_deal = HotDeal::with('products:id,hot_deal_id,product_id,percentage,discounted_price')->findOrFail($id);
+        $hot_deal = HotDeal::with('products:id,hot_deal_id,product_id,percentage,discounted_price')
+            ->findOrFail($id);
         return $this->success(new HotDealResource($hot_deal));
     }
 
@@ -153,5 +154,12 @@ class VendorController extends Controller
         $hot_deal = $hotDealService->store($request->all(), $this->shop_id, $deal);
 
         return $this->success(new HotDealResource($hot_deal));
+    }
+
+    public function deleteDeal($id, HotDealService $hotDealService){
+        
+        $hotDealService->delete($id);
+
+        return $this->success('Item has deleted');
     }
 }

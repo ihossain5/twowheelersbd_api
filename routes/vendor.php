@@ -19,6 +19,7 @@ Route::controller(VendorController::class)
         Route::post('/shop-deals/create', 'createDeal');
         Route::get('/shop-deals/edit/{id}', 'editDeal')->name('vendor.edit.deal');
         Route::post('/shop-deals/update/{id}', 'updateDeal');
+        Route::delete('/shop-deals/delete/{id}', 'deleteDeal');
     });
 Route::controller(OrderController::class)
     ->middleware('auth.jwt')

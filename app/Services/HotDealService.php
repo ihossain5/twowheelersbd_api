@@ -66,12 +66,25 @@ class HotDealService {
         return $hot_deal;
     }
 
-    private function setPrice($product_id, $discounted_price, $discount){
+    public function delete($id){
+      $hot_deal = $this->model->with('products')->findOrFail($id);
+
+      foreach($hot_deal->products as $hot_deal_product){
+         $this->setPrice($hot_deal_product->product_id, $hot_deal_product->old_discounted_price, $hot_deal_product->old_discount, $hot_deal_product->old_discount_type);
+      }
+
+      ( new ImageUoloadService())->deleteImage($hot_deal->banner);
+
+      return $hot_deal->delete();
+
+    }
+
+    private function setPrice($product_id, $discounted_price, $discount, $discount_type = 'PERCENTAGE'){
         $product = Product::where('id',$product_id)->first();
         $product->discount = $discount;
         $product->discounted_price = $discounted_price;
         $product->selling_price = $discounted_price;
-        $product->discount_type = 'PERCENTAGE';
+        $product->discount_type = $discount_type;
         $product->save();
   
         return $product;
@@ -79,6 +92,7 @@ class HotDealService {
   
       private function saveHotDealProduct($data, $hot_deal){
         foreach (json_decode($data['products']) as $product){
+
           $existing_product = Product::findOrFail($product->id);
           
           $hot_deal_product = new HotDealProduct();
