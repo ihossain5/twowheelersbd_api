@@ -42,6 +42,7 @@ Route::controller(VendorAuthController::class)
         Route::post('/forget-password', 'forgetPassword')->name('vendor.forget.password');
         Route::post('/recover-password', 'recoverPassword')->name('vendor.recover.password');
         // Route::post('/refresh', 'refresh');
-        Route::post('/profile', 'getProfile')->middleware('auth.jwt')->name('vendor.profile');
+        Route::get('/profile', 'getProfile')->middleware('auth.jwt')->name('vendor.profile');
+        Route::post('/profile/update', 'updateProfile')->middleware('auth.jwt')->name('vendor.profile.update');
 
     });

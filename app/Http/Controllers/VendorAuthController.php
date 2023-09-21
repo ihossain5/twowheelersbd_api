@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\InvalidOtpException;
-use App\Http\Resources\UserResource;
 use App\Http\Resources\VendorResource;
 use App\Models\ShopOwner;
 use App\Services\AuthService;
+use App\Services\ImageUoloadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class VendorAuthController extends Controller
 {
@@ -98,6 +99,38 @@ class VendorAuthController extends Controller
     public function getProfile()
     {
         return $this->success(new VendorResource(auth('vendor')->user()));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $vendor = auth('vendor')->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255|unique:shop_owners,email, '. $vendor->id,
+            'address' => 'required',
+            'photo' => 'image|mimes:jpg,jpeg,png|max:1024',
+            'mobile' => 'required|string|max:255|unique:shop_owners,mobile, '. $vendor->id,
+        ]);
+
+        $photo = $vendor->photo;
+
+        if($request->photo){
+            if($vendor) ( new ImageUoloadService())->deleteImage($vendor->photo);
+
+            $photo = ( new ImageUoloadService())->storeImage($request->photo,'vendor/',50,50);
+        }
+
+        $vendor->name = $request->name;
+        $vendor->slug =Str::slug($request->name);
+        $vendor->mobile = $request->mobile;
+        $vendor->address = $request->address;
+        $vendor->email = $request->email;
+        $vendor->photo = $photo;
+        $vendor->save();
+
+
+        return $this->success(new VendorResource($vendor));
     }
 
     /**

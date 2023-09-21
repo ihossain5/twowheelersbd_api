@@ -18,6 +18,7 @@ class VendorResource extends JsonResource
             'access_token' => $this->when($request->routeIs('vendor.profile') == false, $this->token),
             'token_type' => $this->when($request->routeIs('vendor.profile') == false, 'bearer'),
             'name' => $this->name,
+            'email' => $this->email,
             'photo' => $this->photo,
             'mobile' => $this->mobile,
             'address' => $this->address,
