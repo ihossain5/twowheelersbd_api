@@ -64,4 +64,5 @@ Route::controller(ProductController::class)
         Route::get('/category/{id}/subcategory', 'subcategories')->name('vendor.all.subcategories');
         Route::get('/all-brand', 'brands')->name('vendor.all.brands');
         Route::get('/brand/{id}/models', 'brandModels')->name('vendor.all.model');
+        Route::get('/all-specifications', 'specifications')->name('vendor.all.specifications');
     });

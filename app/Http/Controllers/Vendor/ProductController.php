@@ -9,6 +9,7 @@ use App\Models\Brand;
 use App\Models\BrandCategory;
 use App\Models\BrandModel;
 use App\Models\Category;
+use App\Models\Specification;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 
@@ -30,5 +31,10 @@ class ProductController extends Controller
         $brand_category_ids = BrandCategory::query()->where('brand_id',$id)->pluck('id');
 
         return $this->success(BrandModel::query()->select('id','name')->whereIn('brand_category_id',$brand_category_ids)->get());
+    }
+
+    
+    public function specifications(){
+        return $this->success(Specification::query()->select('id','name')->get());
     }
 }
