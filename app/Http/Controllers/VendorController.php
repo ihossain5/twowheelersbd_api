@@ -7,12 +7,14 @@ use App\Http\Requests\ShopRequest;
 use App\Http\Resources\CouponResource;
 use App\Http\Resources\HotDealResource;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ReviewResource;
 use App\Http\Resources\ShopResource;
 use App\Http\Resources\VideoResource;
 use App\Models\Coupon;
 use App\Models\HotDeal;
 use App\Models\HotDealProduct;
 use App\Models\Shop;
+use App\Models\ShopReview;
 use App\Models\ShopVideo;
 use App\Services\HotDealService;
 use App\Services\ImageUoloadService;
@@ -257,5 +259,38 @@ class VendorController extends Controller {
         $coupon = Coupon::findOrFail($id)->delete();
 
         return $this->success('coupon has deleted');
+    }
+
+    public function shopReviews(Request $request){
+        $reviews = ShopReview::query()
+        ->with('user:id,name')
+        ->where('shop_id', $this->shop_id)
+        ->when($request->has('status'), function($q) use($request){
+            $q->where('status',$request->status);
+        });
+
+        if ($request->pagination) {
+            $this->pagination = $request->pagination;
+        }
+
+        if ($reviews->count() < 1) {
+            return $this->errorResponse($this->shop_id, 'Shop');
+        }
+        $reviews = $reviews->paginate($this->pagination);
+
+        return $this->success(ReviewResource::collection($reviews)->response()->getData(true));
+    }
+
+    public function approveRating($id){
+        $review = ShopReview::findOrFail($id);
+        $review->status = !$review->status;
+        $review->save();
+
+        $shop = Shop::findOrFail($this->shop_id);
+        $average = getAverageRating($shop->reviews->count(), $shop->reviews->sum('rating'));
+        $shop->average_rating = $average;
+        $shop->save();
+
+        return $this->success(new ReviewResource($review));
     }
 }

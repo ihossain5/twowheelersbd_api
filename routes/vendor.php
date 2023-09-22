@@ -26,6 +26,8 @@ Route::controller(VendorController::class)
         Route::get('/shop/coupons/edit/{id}', 'editCoupon')->name('vendor.shop.edit');
         Route::post('/shop/coupons/update/{id}', 'updateCoupon')->name('vendor.shop.update');
         Route::delete('/shop/coupons/delete/{id}', 'deleteCoupon')->name('vendor.shop.update');
+        Route::get('/shop/reviews', 'shopReviews')->name('vendor.shop.review');
+        Route::post('/shop/reviews/approve/{id}', 'approveRating')->name('vendor.shop.review.approve');
     });
 Route::controller(OrderController::class)
     ->middleware('auth.jwt','shop')
