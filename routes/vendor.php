@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\VendorAuthController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(VendorController::class)
-    ->middleware('auth.jwt','shop')
+    ->middleware('auth.jwt', 'shop')
     ->group(function () {
         Route::post('/shop/create-or-update', 'shopCreate');
         Route::get('/shop/details', 'shopDetails')->name('vendor.shop.details');
@@ -30,7 +31,7 @@ Route::controller(VendorController::class)
         Route::post('/shop/reviews/approve/{id}', 'approveRating')->name('vendor.shop.review.approve');
     });
 Route::controller(OrderController::class)
-    ->middleware('auth.jwt','shop')
+    ->middleware('auth.jwt', 'shop')
     ->group(function () {
         Route::get('/all-orders', 'allOrders')->name('vendor.all.order');
         Route::get('/total-orders', 'totalOrders')->name('vendor.total.order');
@@ -48,10 +49,19 @@ Route::controller(VendorAuthController::class)
         Route::post('/verify-otp', 'verifyOtp')->name('vendor.otp.verify');
         Route::post('/forget-password', 'forgetPassword')->name('vendor.forget.password');
         Route::post('/recover-password', 'recoverPassword')->name('vendor.recover.password');
-   
+
         // Route::post('/refresh', 'refresh');
         Route::get('/profile', 'getProfile')->middleware('auth.jwt')->name('vendor.profile');
         Route::post('/profile/update', 'updateProfile')->middleware('auth.jwt')->name('vendor.profile.update');
         Route::post('/password-change', 'passwordChange')->middleware('auth.jwt')->name('vendor.password.update');
 
+    });
+
+Route::controller(ProductController::class)
+    ->middleware('auth.jwt', 'shop')
+    ->group(function () {
+        Route::get('/all-category', 'categories')->name('vendor.all.categories');
+        Route::get('/category/{id}/subcategory', 'subcategories')->name('vendor.all.subcategories');
+        Route::get('/all-brand', 'brands')->name('vendor.all.brands');
+        Route::get('/brand/{id}/models', 'brandModels')->name('vendor.all.model');
     });
