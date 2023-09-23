@@ -291,6 +291,28 @@ class ProductController extends Controller {
         return $this->success(new VendoProductResource($product));
     }
 
+    public function productDelete($id)
+    {   
+        $product = Product::findOrFail($id);
+
+        ( new ImageUoloadService())->deleteFile($product->video);
+        ( new ImageUoloadService())->deleteFile($product->catelogue_pdf);
+
+        foreach(addUrl(collect(json_decode($product->images))) as $photo){
+            ( new ImageUoloadService())->deleteImage($photo);
+        }
+
+        foreach($product->catelogues as $catelogue){
+            ( new ImageUoloadService())->deleteImage($catelogue->image);
+        }
+
+
+        $product->delete();
+
+        return $this->success('Product has been deletd');
+
+    }
+
     private function catelogueStore($catelogues, $product_id)
     {
         foreach ($catelogues as $catelogue) {
