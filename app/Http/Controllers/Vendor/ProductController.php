@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductStoreRequest;
+use App\Http\Resources\ProductEditResource;
 use App\Http\Resources\VendoCategoryResource;
 use App\Http\Resources\VendoProductResource;
 use App\Models\Brand;
@@ -195,5 +196,10 @@ class ProductController extends Controller {
         }
       
         return json_encode($new_array);
+    }
+
+    public function productEdit($id){
+        $product = Product::findOrFail($id);
+        return $this->success(new ProductEditResource($product));
     }
 }

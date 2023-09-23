@@ -12,4 +12,5 @@ class ProductMotor extends Model
     public function model(){
         return $this->belongsTo(BrandModel::class,'brand_model_id');
     }
+
 }

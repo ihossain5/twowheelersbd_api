@@ -15,7 +15,8 @@ class ProductMotorResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'name' => $this->model->name ?? '',
+            'brand' => $this->model->brandCategory->brand->name ?? '',
+            'model' => $this->model->name ?? '',
         ];
     }
 }

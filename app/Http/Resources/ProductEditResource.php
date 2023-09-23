@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductResource extends JsonResource {
+class ProductEditResource extends JsonResource {
     /**
      * Transform the resource into an array.
      *
@@ -14,37 +14,32 @@ class ProductResource extends JsonResource {
     public function toArray(Request $request): array {
         return [
             'id'                => $this->id,
-            'name'              => $this->name,
-            // 'sub_category' => $this->when($request->routeIs('products'), new SubcategoryResource($this->subcategory)),
+            'sku'               => $this->sku,
             'category'          => $this->subcategory->category->name,
             'sub_category'      => $this->subcategory->name,
-            'shop'              => $this->shop->name,
-            'shop_logo'         => $this->shop->logo,
-            'brand'             => $this->brand_id !== null ? $this->brand->name : 'ALL',
-            'model'             => $this->brand_model_id !== null ? $this->model->name : 'ALL',
-            'description'       => $this->description,
-            'sku'               => $this->sku,
+            'brand'             => $this->brand->name,
+            'model'             => $this->model->name,
             'additional_name_1' => $this->additional_name_1,
             'additional_name_2' => $this->additional_name_2,
             'additional_name_3' => $this->additional_name_3,
             'additional_name_4' => $this->additional_name_4,
             'additional_name_5' => $this->additional_name_5,
+            'is_visible'        => $this->is_visible,
+            'is_available'      => $this->is_available,
+            'description'       => $this->description,
             'colors'            => json_decode($this->colors),
             'sizes'             => json_decode($this->sizes),
+            'specifications'    => ProductSpecificationResource::collection($this->specifications),
             'catelogue_pdf'     => $this->catelogue_pdf,
-            'images'            => addUrl(collect(json_decode($this->images))),
-            'video'             => $this->video,
+            'catelogues'        => ProductCatelogueResource::collection($this->catelogues),
             'quantity'          => $this->quantity,
             'discount_type'     => $this->discount_type,
             'discount'          => $this->discount,
             'regular_price'     => $this->regular_price,
             'discounted_price'  => $this->discounted_price,
-            'status'            => $this->status,
-            'is_available'      => $this->is_available == 1 ? 'Available' : 'Not Avaialable',
-            'catelogues'        => ProductCatelogueResource::collection($this->catelogues),
-            'specifications'    => ProductSpecificationResource::collection($this->specifications),
-            'motors'            => ProductMotorResource::collection($this->motors),
-
+            'images'            => addUrl(collect(json_decode($this->images))),
+            'video'             => $this->video,
+            'similar_motor'     => ProductMotorResource::collection($this->motors),
         ];
     }
 }

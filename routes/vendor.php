@@ -62,6 +62,7 @@ Route::controller(ProductController::class)
     ->group(function () {
         Route::get('/all-products', 'products')->name('vendor.all.products');
         Route::post('/products/store', 'productStore')->name('vendor.product.store');
+        Route::get('/products/edit/{id}', 'productEdit')->name('vendor.product.edit');
         Route::get('/all-category', 'categories')->name('vendor.all.categories');
         Route::get('/category/{id}/subcategory', 'subcategories')->name('vendor.all.subcategories');
         Route::get('/all-brand', 'brands')->name('vendor.all.brands');
