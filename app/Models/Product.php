@@ -37,10 +37,10 @@ class Product extends Model
         return $this->hasMany(ProductMotor::class);
     }
 
-    protected function catelogue_pdf(): Attribute
+    protected function cateloguePdf(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => is_null(!$value) ? BASE_URL() . $value : '',
+            get: fn ($value) => BASE_URL() . $value ,
         );
     }
 

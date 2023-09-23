@@ -21,7 +21,7 @@ class VendoProductResource extends JsonResource {
             'images'       => addUrl(collect(json_decode($this->images))),
             'quantity'     => $this->quantity,
             'price'        => $this->selling_price,
-            'status'       => $this->status,
+            'status'       => $this->status ?? 'PENDING',
             'is_visible'   => $this->is_visible == 1 ? 'Visible' : 'Not Visible',
         ];  
     }
