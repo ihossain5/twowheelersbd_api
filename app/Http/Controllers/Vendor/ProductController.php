@@ -94,30 +94,7 @@ class ProductController extends Controller {
         
         DB::transaction(function () use ($request, $product) {
            
-            $product->name            = $request->name;
-            $product->slug            = Str::slug($request->name);
-            $product->shop_id         = $this->shop_id;
-            $product->sub_category_id = $request->sub_category_id;
-            $product->brand_id        = $request->brand_id;
-            $product->brand_model_id  = $request->brand_model_id;
-            $product->sku             = $request->sku ?? Str::slug($request->name);
-
-            $product->colors            = $request->colors ? $this->array_null_remove($request->colors) : null;
-            $product->sizes             = $request->sizes ? $this->array_null_remove($request->sizes) : null;
-            $product->is_available      = $request->is_available;
-            $product->is_visible        = $request->is_visible;
-            $product->description       = $request->description;
-            $product->regular_price     = $request->regular_price;
-            $product->selling_price     = $request->discounted_price ?? $request->regular_price;
-            $product->quantity          = $request->quantity;
-            $product->discount_type     = $request->discount_type;
-            $product->discount          = $request->discount;
-            $product->discounted_price  = $request->discounted_price;
-            $product->additional_name_1 = $request->additional_name_1;
-            $product->additional_name_2 = $request->additional_name_2;
-            $product->additional_name_3 = $request->additional_name_3;
-            $product->additional_name_4 = $request->additional_name_4;
-            $product->additional_name_5 = $request->additional_name_5;
+            $product = $this->saveCommonData($product, $request);
 
             if ($request->catelogue_pdf) {
                 $product->catelogue_pdf = (new ImageUoloadService())->storeFile($request->catelogue_pdf, 'product/catelogue-pdf/');
@@ -201,5 +178,159 @@ class ProductController extends Controller {
     public function productEdit($id){
         $product = Product::findOrFail($id);
         return $this->success(new ProductEditResource($product));
+    }
+
+    public function productUpdate(Request $request, $id){
+        $product = Product::findOrFail($id);
+
+        DB::transaction(function () use ($request, $product) {
+            $product = $this->saveCommonData($product, $request);
+
+            if ($request->catelogue_pdf) {
+                if ($product->catelogue_pdf) {
+                    (new ImageUoloadService())->deleteFile($product->catelogue_pdf);
+                }
+
+                $product->catelogue_pdf = (new ImageUoloadService())->storeFile($request->catelogue_pdf, 'product/catelogue-pdf/');
+            }
+
+            if ($request->video) {
+                if ($product->video) {
+                    (new ImageUoloadService())->deleteFile($product->video);
+                }
+
+                $product->video = (new ImageUoloadService())->storeFile($request->video, 'product/video/');
+            }
+
+            $old_photos = collect(json_decode($product->images))->toArray();
+            if ($request->images) {
+                foreach ($request->images as $key => $photo) {
+                    if (array_key_exists($key, $old_photos)) {
+                        (new ImageUoloadService())->deleteImage($old_photos[$key]);
+                        unset($old_photos[$key]);
+                    }
+                    $old_photos[$key] = (new ImageUoloadService())->storeImage($photo, 'product/images/', 568, 570);
+                }
+            }
+
+            ksort($old_photos);
+            $old_photos = array_combine(range(1, count($old_photos)), array_values($old_photos));
+
+            $product->images = json_encode($old_photos);
+
+            $product->save();
+
+            //existing catelogue update
+            if ($request->old_catelogues) {
+                foreach ($request->old_catelogues as $old_catelogue) {
+                    if ($old_catelogue['title'] !== null) {
+                        $find_catelogue = ProductCatelogue::find($old_catelogue['id']);
+                        $find_catelogue->title = $old_catelogue['title'];
+                        $find_catelogue->sku = $old_catelogue['sku'];
+
+                        if (array_key_exists('image', $old_catelogue)) {
+                            (new ImageUoloadService())->deleteImage($find_catelogue->image);
+
+                            $find_catelogue->image = (new ImageUoloadService())->storeImage($old_catelogue['image'], 'product/catelogues/', 374, 260);
+                        }
+                        $find_catelogue->save();
+                    }
+                }
+            }
+
+            // new catelogue create
+            if ($request->catelogues) {
+                $this->catelogueStore($request->catelogues, $product->id);
+            }
+
+            if ($request->specifications) {
+                foreach ($request->specifications as $specification) {
+                    $exists = ProductSpecification::where('product_id', $product->id)->where('specification_id', $specification['specification_id'])->first();
+                    if ($specification['value'] != null) {
+                        if ($exists) {
+                            $exists->value = $specification['value'];
+                            $exists->save();
+                        } else {
+                            $brand_specification = new ProductSpecification();
+                            $brand_specification->product_id = $product->id;
+                            $brand_specification->specification_id = $specification['specification_id'];
+                            $brand_specification->value = $specification['value'];
+                            $brand_specification->save();
+                        }
+                    } else {
+                        if ($exists) {
+                            $exists->delete();
+                        }
+                    }
+                }
+            }
+
+            if ($request->motors) {
+                foreach ($request->motors as $motor) {
+                     if (array_key_exists('model_id', $motor) && $motor['model_id'] != null)  {
+                        $product_motor = new ProductMotor();
+                        $product_motor->product_id = $product->id;
+                        $product_motor->brand_model_id = $motor['model_id'];
+                        $product_motor->save();
+                    }
+                }
+            }
+            if ($request->old_motors) {
+                foreach ($request->old_motors as $old_motor) {
+                    if (array_key_exists('model_id', $old_motor) && $old_motor['model_id'] != null) {
+                        $old_product_motor = ProductMotor::find($old_motor['product_motor_id']);
+                        $old_product_motor->product_id = $product->id;
+                        $old_product_motor->brand_model_id = $old_motor['model_id'];
+                        $old_product_motor->save();
+                    }
+                }
+            }
+
+        });
+
+        return $this->success(new VendoProductResource($product));
+    }
+
+    private function catelogueStore($catelogues, $product_id)
+    {
+        foreach ($catelogues as $catelogue) {
+            if (array_key_exists('image', $catelogue) && $catelogue['title'] !== null) {
+                $product_catelogue = new ProductCatelogue();
+                $product_catelogue->product_id = $product_id;
+                $product_catelogue->title = $catelogue['title'];
+                $product_catelogue->sku = $catelogue['sku'];
+                $product_catelogue->image = (new ImageUoloadService())->storeImage($catelogue['image'], 'product/catelogues/', 374, 260);
+                $product_catelogue->save();
+            }
+        }
+    }
+
+    private function saveCommonData($product, $request){
+        $product->name            = $request->name;
+        $product->slug            = Str::slug($request->name);
+        $product->shop_id         = $this->shop_id;
+        $product->sub_category_id = $request->sub_category_id;
+        $product->brand_id        = $request->brand_id;
+        $product->brand_model_id  = $request->brand_model_id;
+        $product->sku             = $request->sku ?? Str::slug($request->name);
+
+        $product->colors            = $request->colors ? $this->array_null_remove($request->colors) : null;
+        $product->sizes             = $request->sizes ? $this->array_null_remove($request->sizes) : null;
+        $product->is_available      = $request->is_available;
+        $product->is_visible        = $request->is_visible;
+        $product->description       = $request->description;
+        $product->regular_price     = $request->regular_price;
+        $product->selling_price     = $request->discounted_price ?? $request->regular_price;
+        $product->quantity          = $request->quantity;
+        $product->discount_type     = $request->discount_type;
+        $product->discount          = $request->discount;
+        $product->discounted_price  = $request->discounted_price;
+        $product->additional_name_1 = $request->additional_name_1;
+        $product->additional_name_2 = $request->additional_name_2;
+        $product->additional_name_3 = $request->additional_name_3;
+        $product->additional_name_4 = $request->additional_name_4;
+        $product->additional_name_5 = $request->additional_name_5;
+
+        return $product;
     }
 }

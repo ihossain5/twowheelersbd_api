@@ -15,6 +15,7 @@ class ProductSpecificationResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'specification_id' => $this->specification->id,
             'name' => $this->specification->name,
             'value' => $this->value
         ];
