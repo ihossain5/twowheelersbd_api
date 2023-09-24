@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MotorbikeStoreRequest;
 use App\Http\Resources\VendoProductResource;
 use App\Models\Product;
 use App\Models\SubCategory;
+use App\Services\ProductService;
+use App\Services\ProductStoreService;
 use Illuminate\Http\Request;
 
 class MotorbikeController extends Controller {
@@ -43,5 +46,12 @@ class MotorbikeController extends Controller {
         $products = $products->paginate($this->pagination);
 
         return $this->success(VendoProductResource::collection($products)->response()->getData(true));
+    }
+
+    public function motorbikeStore(MotorbikeStoreRequest $request, ProductStoreService $productStoreService){
+        // dd($request->all());
+        $product = $productStoreService->store($request->all(), $this->shop_id);
+
+        return $this->success(new VendoProductResource($product));
     }
 }
