@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Vendor\MotorbikeController;
 use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\VendorAuthController;
 use App\Http\Controllers\VendorController;
@@ -70,4 +71,14 @@ Route::controller(ProductController::class)
         Route::get('/all-brand', 'brands')->name('vendor.all.brands');
         Route::get('/brand/{id}/models', 'brandModels')->name('vendor.all.model');
         Route::get('/all-specifications', 'specifications')->name('vendor.all.specifications');
+    });
+
+Route::controller(MotorbikeController::class)
+    ->middleware('auth.jwt', 'shop')
+    ->group(function () {
+        Route::get('/all-motorbikes', 'motorbikes')->name('vendor.all.motorbikes');
+        Route::post('/motorbikes/store', 'productStore')->name('vendor.motorbike.store');
+        Route::get('/motorbikes/edit/{id}', 'productEdit')->name('vendor.motorbike.edit');
+        Route::delete('/motorbikes/delete/{id}', 'productDelete')->name('vendor.motorbike.delete');
+        Route::post('/motorbikes/update/{id}', 'productUpdate')->name('vendor.motorbike.update');
     });

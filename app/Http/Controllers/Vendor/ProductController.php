@@ -56,6 +56,7 @@ class ProductController extends Controller {
     public function products(Request $request) {
         $products = Product::query()->select('id', 'name', 'images', 'sub_category_id', 'sku', 'quantity', 'selling_price', 'is_visible', 'status')
             ->where('shop_id', $this->shop_id)
+            ->where('is_motorbike', 0)
             ->when(request('filter') == 'true', function ($q) use ($request) {
                 $q->when($request->has('name'), function ($query) use ($request) {
                     $query->where('name', 'like', '%' . $request->name . '%');
