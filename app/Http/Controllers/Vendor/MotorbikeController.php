@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MotorbikeStoreRequest;
+use App\Http\Resources\MotorbikeEditResource;
+use App\Http\Resources\ProductEditResource;
 use App\Http\Resources\VendoProductResource;
 use App\Models\Product;
 use App\Models\SubCategory;
@@ -53,5 +55,10 @@ class MotorbikeController extends Controller {
         $product = $productStoreService->store($request->all(), $this->shop_id);
 
         return $this->success(new VendoProductResource($product));
+    }
+
+    public function motorbikeEdit($id){
+        $product = Product::findOrFail($id);
+        return $this->success(new MotorbikeEditResource($product));
     }
 }

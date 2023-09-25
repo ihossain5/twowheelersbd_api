@@ -78,7 +78,7 @@ Route::controller(MotorbikeController::class)
     ->group(function () {
         Route::get('/all-motorbikes', 'motorbikes')->name('vendor.all.motorbikes');
         Route::post('/motorbikes/store', 'motorbikeStore')->name('vendor.motorbike.store');
-        Route::get('/motorbikes/edit/{id}', 'productEdit')->name('vendor.motorbike.edit');
+        Route::get('/motorbikes/edit/{id}', 'motorbikeEdit')->name('vendor.motorbike.edit');
         Route::delete('/motorbikes/delete/{id}', 'productDelete')->name('vendor.motorbike.delete');
         Route::post('/motorbikes/update/{id}', 'productUpdate')->name('vendor.motorbike.update');
     });

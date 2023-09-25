@@ -40,13 +40,13 @@ class Product extends Model
     protected function cateloguePdf(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => BASE_URL() . $value ,
+            get: fn ($value) => $value ? BASE_URL() . $value : null ,
         );
     }
     protected function video(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => BASE_URL() . $value ,
+            get: fn ($value) => $value ? BASE_URL() . $value : null ,
         );
     }
 
