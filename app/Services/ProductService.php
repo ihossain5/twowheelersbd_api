@@ -23,6 +23,6 @@ class ProductService {
     }
 
     public function getResults($pagination){
-        return $this->condition()->paginate($pagination);
+        return $this->condition()->latest()->paginate($pagination);
     }
 }
