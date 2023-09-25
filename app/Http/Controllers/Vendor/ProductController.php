@@ -84,7 +84,7 @@ class ProductController extends Controller {
         if ($products->count() < 1) {
             return $this->errorResponse($this->shop_id, 'Shop');
         }
-        $products = $products->paginate($this->pagination);
+        $products = $products->latest()->paginate($this->pagination);
 
         return $this->success(VendoProductResource::collection($products)->response()->getData(true));
     }

@@ -71,6 +71,7 @@ Route::controller(ProductController::class)
         Route::get('/all-brand', 'brands')->name('vendor.all.brands');
         Route::get('/brand/{id}/models', 'brandModels')->name('vendor.all.model');
         Route::get('/all-specifications', 'specifications')->name('vendor.all.specifications');
+        Route::delete('/motorbikes/delete/{id}', 'productDelete')->name('vendor.motorbike.delete');
     });
 
 Route::controller(MotorbikeController::class)
@@ -79,6 +80,6 @@ Route::controller(MotorbikeController::class)
         Route::get('/all-motorbikes', 'motorbikes')->name('vendor.all.motorbikes');
         Route::post('/motorbikes/store', 'motorbikeStore')->name('vendor.motorbike.store');
         Route::get('/motorbikes/edit/{id}', 'motorbikeEdit')->name('vendor.motorbike.edit');
-        Route::delete('/motorbikes/delete/{id}', 'motorbikeDelete')->name('vendor.motorbike.delete');
+      
         Route::post('/motorbikes/update/{id}', 'motorbikeUpdate')->name('vendor.motorbike.update');
     });
