@@ -41,14 +41,14 @@ class HotDealService {
             }
 
             if(array_key_exists('old_products',$data)){
-                foreach (json_decode($data['old_products']) as $old_product){
-                  $existing_product = Product::findOrFail($old_product->product_id);
+                foreach ($data['old_products'] as $old_product){
+                  $existing_product = Product::findOrFail($old_product['product_id']);
       
-                  $old_product_deal = HotDealProduct::find($old_product->hot_deal_product_id);
+                  $old_product_deal = HotDealProduct::find($old_product['hot_deal_product_id']);
                   $old_product_deal->hot_deal_id = $hot_deal->id;
-                  $old_product_deal->product_id = $old_product->product_id;
-                  $old_product_deal->percentage = $old_product->percentage;
-                  $old_product_deal->discounted_price = $old_product->discounted_price;
+                  $old_product_deal->product_id = $old_product['product_id'];
+                  $old_product_deal->percentage = $old_product['percentage'];
+                  $old_product_deal->discounted_price = $old_product['discounted_price'];
                   $old_product_deal->old_discount_type = $existing_product->discount_type;
                   $old_product_deal->old_discount = $existing_product->discount;
                   $old_product_deal->old_regular_price = $existing_product->regular_price;
@@ -56,7 +56,7 @@ class HotDealService {
                   $old_product_deal->old_selling_price = $existing_product->selling_price;
                   $old_product_deal->save();
       
-                  $this->setPrice($old_product->product_id, $old_product->discounted_price, $old_product->percentage);
+                  $this->setPrice($old_product['product_id'], $old_product['discounted_price'], $old_product['percentage']);
                 }
               }
 
@@ -91,15 +91,15 @@ class HotDealService {
       }
   
       private function saveHotDealProduct($data, $hot_deal){
-        foreach (json_decode($data['products']) as $product){
+        foreach ($data['products'] as $product){
 
-          $existing_product = Product::findOrFail($product->id);
+          $existing_product = Product::findOrFail($product['id']);
           
           $hot_deal_product = new HotDealProduct();
           $hot_deal_product->hot_deal_id = $hot_deal->id;
-          $hot_deal_product->product_id = $product->id;
-          $hot_deal_product->percentage = $product->percentage;
-          $hot_deal_product->discounted_price = $product->discounted_price;
+          $hot_deal_product->product_id = $product['id'];
+          $hot_deal_product->percentage = $product['percentage'];
+          $hot_deal_product->discounted_price = $product['discounted_price'];
           $hot_deal_product->old_discount_type = $existing_product->discount_type;
           $hot_deal_product->old_discount = $existing_product->discount;
           $hot_deal_product->old_regular_price = $existing_product->regular_price;
@@ -107,7 +107,7 @@ class HotDealService {
           $hot_deal_product->old_selling_price = $existing_product->selling_price;
           $hot_deal_product->save();
   
-          $this->setPrice($product->id, $product->discounted_price, $product->percentage);
+          $this->setPrice($product['id'], $product['discounted_price'], $product['percentage']);
         }
       }
 }
