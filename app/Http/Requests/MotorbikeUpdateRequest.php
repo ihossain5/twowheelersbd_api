@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductStoreRequest extends FormRequest
+class MotorbikeUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,24 +22,18 @@ class ProductStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'discount_type' => 'required',
+            'name' => 'required|max:255',
+            'is_visible'=> 'required',
+            'discount_type'=> 'required',
+            'brand_id'=> 'required',
+            'brand_model_id'=> 'required',
             'sub_category_id'=> 'required',
             'quantity'=> 'required',
             'regular_price'=> 'required',
             'description'=> 'required',
-            'is_available'=> 'required',
-            'is_visible'=> 'required',
-            'colors' => 'array',
-            'sizes' => 'array',
-            'specifications' => 'array',
-            'catelogues' => 'array',
-            'motors' => 'array',
-            'images' => 'required|array',
-            'images.*' => 'image|mimes:jpg,jpeg,png|max:1024',
-            'catelogue_pdf' => 'mimes:pdf|max:3072',
             'video' => 'mimes:mp4|max:5120',
-            'catelogues.*.image' => 'image|mimes:jpg,jpeg,png|max:1024',
+            'images' => 'array',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:1024',
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductEditResource;
 use App\Http\Resources\VendoCategoryResource;
 use App\Http\Resources\VendoProductResource;
@@ -181,7 +182,7 @@ class ProductController extends Controller {
         return $this->success(new ProductEditResource($product));
     }
 
-    public function productUpdate(Request $request, $id){
+    public function productUpdate(ProductUpdateRequest $request, $id){
         $product = Product::findOrFail($id);
 
         DB::transaction(function () use ($request, $product) {

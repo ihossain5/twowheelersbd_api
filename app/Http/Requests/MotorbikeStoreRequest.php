@@ -33,7 +33,7 @@ class MotorbikeStoreRequest extends FormRequest
             'description'=> 'required',
             'video' => 'mimes:mp4|max:5120',
             'images' => 'required|array',
-            'images.*' => 'image|mimes:jpg,jpeg,png',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:1024',
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MotorbikeStoreRequest;
+use App\Http\Requests\MotorbikeUpdateRequest;
 use App\Http\Resources\MotorbikeEditResource;
 use App\Http\Resources\ProductEditResource;
 use App\Http\Resources\VendoProductResource;
@@ -20,7 +21,7 @@ class MotorbikeController extends Controller {
         $this->shop_id = auth('vendor')->user()?->shop?->id;
     }
 
-    public function motorbikes(Request $request) {
+    public function motorbikes(MotorbikeStoreRequest $request) {
         $products = Product::query()->select('id', 'name', 'images', 'sub_category_id', 'sku', 'quantity', 'selling_price', 'is_visible', 'status')
             ->where('shop_id', $this->shop_id)
             ->where('is_motorbike', 1)
@@ -63,7 +64,7 @@ class MotorbikeController extends Controller {
         return $this->success(new MotorbikeEditResource($product));
     }
 
-    public function motorbikeUpdate(Request $request, $id, ProductStoreService $productStoreService){
+    public function motorbikeUpdate(MotorbikeUpdateRequest $request, $id, ProductStoreService $productStoreService){
         $product = Product::findOrFail($id);
 
         $product = $productStoreService->store($request->all(), $this->shop_id, $product);
