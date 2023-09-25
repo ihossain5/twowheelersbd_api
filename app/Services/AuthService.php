@@ -15,11 +15,15 @@ class AuthService
 
     public function login($request_data, $type = null)
     {
-        $credentials = $request_data;
+        $credentials = array('mobile'=>$request_data['mobile'], 'password'=> $request_data['password']);
 
         if (!$token = auth($type)->attempt($credentials)) {
             throw new InvalidAuthenticateException('Unathorized');
         }
+
+        $user = auth($type)->user();
+        $user->device_id = $request_data['device_id'];
+        $user->save();
 
         return $this->respondWithToken($token, $type);
     }
@@ -50,7 +54,7 @@ class AuthService
             $data->save();
         }
 
-        // $sms = Utils::sendSms($request_data['mobile'],'Your otp code is '. $otp);
+        $sms = Utils::sendSms($request_data['mobile'],'Your otp code is '. $otp);
 
         $token = Auth::guard($type)->login($data);
 
@@ -71,6 +75,8 @@ class AuthService
             $data->otp_expire_time = $exprireTime;
         }
         $data->save();
+
+        Utils::sendSms($mobile,'Your otp code is '. $otp);
 
         return $data;
     }

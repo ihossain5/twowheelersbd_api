@@ -16,7 +16,10 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'storage_url' => env('STORAGE_BASE_URL', ''),
+    'sms_gateway_url' => env('SMS_GATEWAY_URL', ''),
+    'sms_gateway_token' => env('SMS_TOKEN', ''),
+    'fcm_push_app_key' => env('FCM_PUSH_APP_KEY', ''),
     'URL' => env('URL', ''),
 
     /*
@@ -71,7 +74,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Dhaka',
 
     /*
     |--------------------------------------------------------------------------
