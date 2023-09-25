@@ -59,6 +59,15 @@ class MotorbikeController extends Controller {
 
     public function motorbikeEdit($id){
         $product = Product::findOrFail($id);
+        
         return $this->success(new MotorbikeEditResource($product));
+    }
+
+    public function motorbikeUpdate(Request $request, $id, ProductStoreService $productStoreService){
+        $product = Product::findOrFail($id);
+
+        $product = $productStoreService->store($request->all(), $this->shop_id, $product);
+
+        return $this->success(new VendoProductResource($product));
     }
 }
