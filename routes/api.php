@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('/clear-cache/',function(){
+    $configCache = Artisan::call('config:cache');
+    $clearCache  = Artisan::call('cache:clear');
+    $clearRoute  = Artisan::call('route:clear');
+    $clearView   = Artisan::call('view:clear');
+    // return what you want
+    return "Finished";
 });
 
 
