@@ -58,24 +58,18 @@ class ProductController extends Controller {
         $products = Product::query()->select('id', 'name', 'images', 'sub_category_id', 'sku', 'quantity', 'selling_price', 'is_visible', 'status')
             ->where('shop_id', $this->shop_id)
             ->where('is_motorbike', 0)
-            ->when(request('filter') == 'true', function ($q) use ($request) {
-                $q->when($request->has('name'), function ($query) use ($request) {
-                    $query->where('name', 'like', '%' . $request->name . '%');
-                });
-
-                $q->when($request->has('sku'), function ($query) use ($request) {
-                    $query->where('sku', 'like', '%' . $request->sku . '%');
-                });
-
-                $q->when($request->has('category_id') && request('category_id') != 'ALL', function ($query) use ($request) {
-                    $ids = SubCategory::query()->where('category_id', $request->category_id)->pluck('id');
-                    $query->whereIn('sub_category_id', $ids);
-                });
-
-                $q->when($request->has('subcategory_id'), function ($query) use ($request) {
-                    $query->whereIn('sub_category_id', $request->subcategory_id);
-                });
-
+            ->when($request->has('name'), function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->when($request->has('sku'), function ($query) use ($request) {
+                $query->where('sku', 'like', '%' . $request->sku . '%');
+            })
+            ->when($request->has('category_id') && request('category_id') != 'ALL', function ($query) use ($request) {
+                $ids = SubCategory::query()->where('category_id', $request->category_id)->pluck('id');
+                $query->whereIn('sub_category_id', $ids);
+            })
+            ->when($request->has('subcategory_id'), function ($query) use ($request) {
+                $query->whereIn('sub_category_id', $request->subcategory_id);
             });
 
         if ($request->pagination) {
