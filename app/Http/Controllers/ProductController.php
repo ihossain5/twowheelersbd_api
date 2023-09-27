@@ -21,4 +21,16 @@ class ProductController extends Controller
 
         return  $this->success(ProductResource::collection($products)->response()->getData(true));
     }
+
+    public function productsBySubCategory(Request $request, $id){
+        if($request->pagination) $this->pagination = $request->pagination;
+
+        $products = $this->productService->condition()->where('sub_category_id',$id)->latest()->paginate($this->pagination); 
+
+        if($products->count() < 1) {
+            return $this->productErrorResponse($id, 'Sub Category');
+        }  
+
+        return $this->success(ProductResource::collection($products)->response()->getData(true));
+    }
 }
