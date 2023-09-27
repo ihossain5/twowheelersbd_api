@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ShopResource;
+use App\Http\Resources\ShopReviewResourece;
 use App\Http\Resources\ShopVideoResourece;
 use App\Models\Shop;
+use App\Models\ShopReview;
 use App\Models\ShopVideo;
 use Illuminate\Http\Request;
 
@@ -21,7 +23,6 @@ class ShopController extends Controller
     }
 
     public function shopVideos(Request $request, $id){
-       
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -35,5 +36,21 @@ class ShopController extends Controller
         $videos = $videos->latest()->paginate($this->pagination);
 
         return  $this->success(ShopVideoResourece::collection($videos)->response()->getData(true));
+    }
+
+    public function shopReviews(Request $request, $id){
+        if ($request->pagination) {
+            $this->pagination = $request->pagination;
+        }
+
+        $reviews = ShopReview::query()->where('shop_id',$id)->where('status',1);
+      
+        if ($reviews->count() < 1) {
+            return $this->errorResponse($id, 'Shop');
+        }
+
+        $reviews = $reviews->latest()->paginate($this->pagination);
+
+        return  $this->success(ShopReviewResourece::collection($reviews)->response()->getData(true));
     }
 }

@@ -60,6 +60,7 @@ Route::controller(ShopController::class)
 ->group(function () {
     Route::get('/shop-hot-deals', 'shopHotdeals');
     Route::get('/shop/{id}/videos', 'shopVideos');
+    Route::get('/shop/{id}/reviews', 'shopReviews');
     Route::get('/single-shop/{id}/details', 'singleShop')->name('shop.details');
 });
 
