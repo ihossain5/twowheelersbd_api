@@ -59,6 +59,7 @@ Route::controller(HomeController::class)
 Route::controller(ShopController::class)
 ->group(function () {
     Route::get('/shop-hot-deals', 'shopHotdeals');
+    Route::get('/shop/{id}/videos', 'shopVideos');
     Route::get('/single-shop/{id}/details', 'singleShop')->name('shop.details');
 });
 
@@ -66,7 +67,6 @@ Route::controller(ApiController::class)
 ->group(function () {
     Route::get('/brand-categories', 'brandCategories');
     Route::get('/models', 'models')->name('all.models');
-
 });
 
 
