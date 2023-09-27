@@ -64,18 +64,11 @@ Route::controller(ShopController::class)
 
 Route::controller(ApiController::class)
 ->group(function () {
-    // Route::get('/products', 'products')->name('products');
-    // Route::get('/products/{id}/details', 'getProductById');
-    // Route::get('/brand-categories', 'brandCategories');
-    // Route::get('/category/{id}/products', 'productsByCategory');
-    // Route::get('/sub-category/{id}/products', 'productsBySubCategory')->name('subcategory.products');
-    // Route::get('/shop/{id}/products', 'productsByShop')->name('shop.products');
-    // Route::get('/model/{id}/products', 'productsByModel')->name('model.products');
-    // Route::get('/models', 'models')->name('all.models');
-    // Route::get('/accessories', 'accessories')->name('all.accessories');
-    // Route::get('/motorbikes', 'motorbikes')->name('all.motorbikes');
-    // Route::get('/motorbikes/{id}/details', 'motorbikeDetails')->name('motorbikes.details');
+    Route::get('/brand-categories', 'brandCategories');
+    Route::get('/models', 'models')->name('all.models');
+
 });
+
 
 Route::controller(ProductController::class)
 ->group(function () {
@@ -83,11 +76,11 @@ Route::controller(ProductController::class)
     Route::get('/sub-category/{id}/products', 'productsBySubCategory')->name('subcategory.products');
     Route::get('/shop/{id}/products', 'productsByShop')->name('shop.products');
     Route::get('/model/{id}/products', 'productsByModel')->name('model.products');
+    Route::get('/hot-deals/{id}/products', 'productsByHotDeal');
 
     Route::get('/products', 'products')->name('products');
     Route::get('/products/{id}/details', 'getProductById');
-    Route::get('/brand-categories', 'brandCategories');
-    Route::get('/models', 'models')->name('all.models');
+
     Route::get('/accessories', 'accessories')->name('all.accessories');
     Route::get('/motorbikes', 'motorbikes')->name('all.motorbikes');
     Route::get('/motorbikes/{id}/details', 'motorbikeDetails')->name('motorbikes.details');
