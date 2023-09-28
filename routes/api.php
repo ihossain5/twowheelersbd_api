@@ -78,6 +78,8 @@ Route::controller(ProductController::class)
     Route::get('/shop/{id}/products', 'productsByShop')->name('shop.products');
     Route::get('/model/{id}/products', 'productsByModel')->name('model.products');
     Route::get('/hot-deals/{id}/products', 'productsByHotDeal');
+    Route::get('/shop/{id}/top-selling/products', 'shopWiseTopProducts');
+    Route::get('/shop/{id}/new-arraival/products', 'shopWiseNewArraivalProducts');
 
     Route::get('/products', 'products')->name('products');
     Route::get('/products/{id}/details', 'getProductById');

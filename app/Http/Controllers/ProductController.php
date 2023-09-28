@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductResource;
 use App\Models\HotDealProduct;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\SubCategory;
 use App\Services\ProductService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller {
@@ -108,4 +111,41 @@ class ProductController extends Controller {
 
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
+
+    public function shopWiseTopProducts(Request $request, $id) {
+        if ($request->pagination) {
+            $this->pagination = $request->pagination;
+        }
+
+        $order_ids = Order::where('shop_id',$id)->pluck('id');
+
+        $product_ids = OrderItem::whereIn('order_id',$order_ids)->pluck('product_id')->unique();
+
+        $products = $this->productService->condition()->whereIn('id', $product_ids);
+
+        if ($products->count() < 1) {
+            return $this->errorResponse($id, 'Shop');
+        }
+
+        $products = $products->latest()->paginate($this->pagination);
+
+        return $this->success(ProductResource::collection($products)->response()->getData(true));
+    }
+
+    public function shopWiseNewArraivalProducts(Request $request, $id) {
+        if ($request->pagination) {
+            $this->pagination = $request->pagination;
+        }
+
+        $products = $this->productService->condition()->whereDate('created_at', '>=', Carbon::now()->subDays(7));
+
+        if ($products->count() < 1) {
+            return $this->errorResponse($id, 'Shop');
+        }
+
+        $products = $products->latest()->paginate($this->pagination);
+
+        return $this->success(ProductResource::collection($products)->response()->getData(true));
+    }
+    
 }
