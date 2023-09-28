@@ -17,4 +17,15 @@ class Blog extends Model
             get: fn (string $value) => Carbon::parse($value)->format('F d, Y') ,
         );
     }
+
+    public function admin(){
+        return $this->belongsTo(Admin::class);
+    }
+
+    public function comments(){
+        return $this->hasMany(BlogComment::class)
+        ->where('status',1)
+        ->orderBy('id','desc');
+    }
+
 }

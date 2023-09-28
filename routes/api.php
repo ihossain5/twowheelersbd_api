@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
@@ -53,7 +54,7 @@ Route::controller(HomeController::class)
     Route::get('/categories', 'categories')->name('categories');
     Route::get('/brands', 'brands');
     Route::get('/shops', 'shops');
-    Route::get('/blogs', 'blogs');
+  
 });
 
 Route::controller(ShopController::class)
@@ -68,6 +69,12 @@ Route::controller(ApiController::class)
 ->group(function () {
     Route::get('/brand-categories', 'brandCategories');
     Route::get('/models', 'models')->name('all.models');
+});
+
+Route::controller(BlogController::class)
+->group(function () {
+    Route::get('/blogs', 'blogs');
+    Route::get('/blogs/{id}/details', 'details')->name('blog.details');
 });
 
 

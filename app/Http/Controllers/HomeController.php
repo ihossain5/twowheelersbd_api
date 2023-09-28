@@ -96,14 +96,5 @@ class HomeController extends Controller
 
     // }
 
-    public function blogs(Request $request){
-        if($request->pagination) $this->pagination = $request->pagination;
-
-        $blogs = Blog::query()
-            ->select('id','title','description','photos','date')
-            ->where('status',1)
-            ->paginate($this->pagination);
-        
-        return  $this->success(BlogResource::collection($blogs)->response()->getData(true));
-    }
+  
 }
