@@ -87,15 +87,14 @@ class HomeController extends Controller
         if ($models->count() < 1) {
             return $this->errorResponse('Category', 'accessories');
         }
-        
+
         $models = $models->latest()->paginate($this->pagination);
 
-        $filtered_collection = $models->filter(function ($item) {
-            return $item->motorbikes_count > 0;
-        })->values();
+        // $filtered_collection = $models->filter(function ($item) {
+        //     return $item->motorbikes_count > 0;
+        // })->values();
 
-
-        return $this->success(MotorbikeModelResource::collection($filtered_collection)->response()->getData(true));
+        return $this->success(MotorbikeModelResource::collection($models)->response()->getData(true));
     }
 
   

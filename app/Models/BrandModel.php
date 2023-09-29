@@ -10,6 +10,8 @@ class BrandModel extends Model
 {
     use HasFactory;
 
+    protected $withCount  = ['motorbikes'];
+
     public function brandCategory(){
         return $this->belongsTo(BrandCategory::class);
     }
@@ -32,6 +34,13 @@ class BrandModel extends Model
     
     public function motorbikes(){
         return $this->hasMany(Product::class)->where('status','APPROVED')->where('is_motorbike',1)->where('is_visible',1);
+    }
+
+    public function getTotalMotorbikesAttribute()
+    {
+    
+        return $this->motorbikes()->count();
+    
     }
 
     protected function video(): Attribute
