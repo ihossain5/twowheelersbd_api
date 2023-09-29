@@ -8,12 +8,14 @@ use App\Http\Resources\BrandCollection;
 use App\Http\Resources\BrandResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\HotDealResource;
+use App\Http\Resources\MotorbikeModelResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ShopResource;
 use App\Http\Resources\SliderResource;
 use App\Models\Blog;
 use App\Models\Brand;
 use App\Models\BrandCategory;
+use App\Models\BrandModel;
 use App\Models\Category;
 use App\Models\HotDeal;
 use App\Models\Product;
@@ -74,27 +76,27 @@ class HomeController extends Controller
         
         return  $this->success(ShopResource::collection($shops)->response()->getData(true));
     }
-    // public function products(Request $request){
-    //     try {
-    //         if($request->pagination) $this->pagination = $request->pagination;
 
-    //         $products = Product::query()
-    //         ->select('id','sub_category_id', 'brand_id','shop_id', 'brand_model_id', 'additional_names', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount_type','discount','regular_price','discounted_price','is_available','images','status')
-    //         ->with('subcategory:id,category_id,name','subcategory.category:id,name')
-    //         ->where('status','APPROVED')
-    //         ->where('is_visible',1)
-    //         ->paginate($pagination ?? $this->pagination);
+    public function motorbikeModels(Request $request){
+        if($request->pagination) $this->pagination = $request->pagination;
+
+        $models = BrandModel::query()
+        ->select('id','name','images')
+            ->withCount('motorbikes');
+
+        if ($models->count() < 1) {
+            return $this->errorResponse('Category', 'accessories');
+        }
         
-    //     return  $this->success(ProductResource::collection($products)->response()->getData(true));
+        $models = $models->latest()->paginate($this->pagination);
 
-    //     } catch (\Throwable $th) {
-    //         return response()->json([
-    //             'status' => false,
-    //             'message' => $th->getMessage(),
-    //         ]);
-    //     }
+        $filtered_collection = $models->filter(function ($item) {
+            return $item->motorbikes_count > 0;
+        })->values();
 
-    // }
+
+        return $this->success(MotorbikeModelResource::collection($filtered_collection)->response()->getData(true));
+    }
 
   
 }

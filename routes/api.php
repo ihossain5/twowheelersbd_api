@@ -54,6 +54,7 @@ Route::controller(HomeController::class)
     Route::get('/categories', 'categories')->name('categories');
     Route::get('/brands', 'brands');
     Route::get('/shops', 'shops');
+    Route::get('/motorbike-models', 'motorbikeModels');
   
 });
 

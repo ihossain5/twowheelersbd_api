@@ -159,5 +159,21 @@ class ProductController extends Controller {
 
         return $this->success(new ProductResource($product));
     }
+
+    public function accessories(Request $request){
+        if($request->pagination) $this->pagination = $request->pagination;
+
+        $subcategories = SubCategory::query()->where('category_id', 8)->pluck('id');
+        
+        $products = $this->productService->condition()->whereIn('sub_category_id', $subcategories);
+
+        if ($products->count() < 1) {
+            return $this->errorResponse('Category', 'accessories');
+        }
+
+        $products = $products->latest()->paginate($this->pagination);
+
+        return  $this->success(ProductResource::collection($products)->response()->getData(true));
+    }
     
 }

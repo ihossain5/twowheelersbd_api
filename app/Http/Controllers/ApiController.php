@@ -13,8 +13,6 @@ use Illuminate\Http\Request;
 class ApiController extends Controller
 {
 
-
-
     public function brandCategories(Request $request){
         if($request->pagination) $this->pagination = $request->pagination;
 
