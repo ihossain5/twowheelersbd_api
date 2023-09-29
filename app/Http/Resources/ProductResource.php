@@ -41,7 +41,7 @@ class ProductResource extends JsonResource {
                 'catelogues'        => ProductCatelogueResource::collection($this->catelogues),
                 'specifications'    => ProductSpecificationResource::collection($this->specifications),
                 'motors'            => ProductMotorResource::collection($this->motors),
-                'reviews'            => ReviewResource::collection($this->reviews),
+                'reviews'           => ReviewResource::collection($this->reviews),
 
                 // 'brand'             => $this->brand_id !== null ? $this->brand->name : 'ALL',
                 // 'model'             => $this->brand_model_id !== null ? $this->model->name : 'ALL',

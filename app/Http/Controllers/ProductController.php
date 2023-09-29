@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductResource;
+use App\Models\BrandModel;
 use App\Models\HotDealProduct;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -169,6 +170,22 @@ class ProductController extends Controller {
 
         if ($products->count() < 1) {
             return $this->errorResponse('Category', 'accessories');
+        }
+
+        $products = $products->latest()->paginate($this->pagination);
+
+        return  $this->success(ProductResource::collection($products)->response()->getData(true));
+    }
+
+    public function motorbikes($id,Request $request){
+        if($request->pagination) $this->pagination = $request->pagination;
+
+        $model = BrandModel::query()->where('id', $id)->pluck('id');
+        
+        $products = $this->productService->condition(1)->whereIn('brand_model_id', $model);
+
+        if ($products->count() < 1) {
+            return $this->errorResponse($id, 'Model');
         }
 
         $products = $products->latest()->paginate($this->pagination);

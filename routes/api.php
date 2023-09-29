@@ -95,7 +95,7 @@ Route::controller(ProductController::class)
     Route::get('/products/{id}/details', 'getProductById')->name('product.details');
 
     Route::get('/accessories', 'accessories')->name('all.accessories');
-    Route::get('/motorbikes', 'motorbikes')->name('all.motorbikes');
+    Route::get('/model/{id}/motorbikes', 'motorbikes')->name('model.motorbikes');
     Route::get('/motorbikes/{id}/details', 'motorbikeDetails')->name('motorbikes.details');
 });
 
