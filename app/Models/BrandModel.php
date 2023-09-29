@@ -50,7 +50,7 @@ class BrandModel extends Model
         );
     }
 
-    protected function catelogue_pdf(): Attribute
+    protected function cateloguePdf(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value ? BASE_URL() . $value : null,

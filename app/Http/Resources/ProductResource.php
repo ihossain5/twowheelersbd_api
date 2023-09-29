@@ -35,7 +35,6 @@ class ProductResource extends JsonResource {
                 'colors'            => json_decode($this->colors),
                 'sizes'             => json_decode($this->sizes),
                 'catelogue_pdf'     => $this->catelogue_pdf,
-                'images'            => addUrl(collect(json_decode($this->images))),
                 'video'             => $this->video,
                 'quantity'          => $this->quantity,
                 'catelogues'        => ProductCatelogueResource::collection($this->catelogues),

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MotorbikeDetailsResource;
 use App\Http\Resources\ProductResource;
 use App\Models\BrandModel;
 use App\Models\HotDealProduct;
@@ -191,6 +192,16 @@ class ProductController extends Controller {
         $products = $products->latest()->paginate($this->pagination);
 
         return  $this->success(ProductResource::collection($products)->response()->getData(true));
+    }
+
+    public function motorbikeDetails($id){
+        $motorbike = Product::query()
+        ->select('id','sub_category_id', 'brand_model_id', 'shop_id', 'description','video','catelogue_pdf', 'name','quantity','discount','regular_price','images','sku','selling_price', 'average_rating','mileage')
+        ->withCount('reviews')
+        ->with('subcategory:id,category_id,name','subcategory.category:id,name','shop:id,name','catelogues','specifications','reviews','model:id','model.products')
+        ->findOrFail($id);
+
+        return  $this->success(new MotorbikeDetailsResource($motorbike));
     }
     
 }
