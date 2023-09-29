@@ -13,12 +13,13 @@ class ReviewResource extends JsonResource {
      */
     public function toArray(Request $request): array {
         return [
-            'id'        => $this->id,
-            'user_name' => $this->user?->name,
-            'rating'    => $this->rating,
-            'review'    => $this->review,
-            'status'    => $this->status,
-            'date'      => formatDate($this->created_at),
+            'id'         => $this->id,
+            'user_name'  => $this->user?->name,
+            'user_photo' => $this->user?->photo,
+            'rating'     => $this->rating,
+            'review'     => $this->review,
+            'status'     => $this->status,
+            'date'       => formatDate($this->created_at),
         ];
     }
 }

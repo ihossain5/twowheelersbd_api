@@ -15,13 +15,13 @@ class Shop extends Model
     protected function logo(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => BASE_URL(). $value,
+            get: fn ($value) => BASE_URL(). $value,
         );
     }
     protected function photo(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => BASE_URL() . $value,
+            get: fn ($value) => BASE_URL() . $value,
         );
     }
 

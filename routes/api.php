@@ -89,7 +89,7 @@ Route::controller(ProductController::class)
     Route::get('/shop/{id}/new-arraival/products', 'shopWiseNewArraivalProducts');
 
     Route::get('/products', 'products')->name('products');
-    Route::get('/products/{id}/details', 'getProductById');
+    Route::get('/products/{id}/details', 'getProductById')->name('product.details');
 
     Route::get('/accessories', 'accessories')->name('all.accessories');
     Route::get('/motorbikes', 'motorbikes')->name('all.motorbikes');

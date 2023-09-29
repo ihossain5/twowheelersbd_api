@@ -6,6 +6,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\HotDealProduct;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\SubCategory;
 use App\Services\ProductService;
 use Carbon\Carbon;
@@ -146,6 +147,17 @@ class ProductController extends Controller {
         $products = $products->latest()->paginate($this->pagination);
 
         return $this->success(ProductResource::collection($products)->response()->getData(true));
+    }
+
+    
+    public function getProductById($id){
+        $product = Product::query()
+            ->select('id','sub_category_id', 'shop_id', 'additional_name_1', 'additional_name_2', 'additional_name_3', 'additional_name_4','additional_name_5', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount','regular_price','images','sku','selling_price', 'average_rating')
+            ->withCount('reviews')
+            ->with('subcategory:id,category_id,name','subcategory.category:id,name','shop:id,name','catelogues','specifications','motors','reviews')
+            ->findOrFail($id);
+
+        return $this->success(new ProductResource($product));
     }
     
 }
