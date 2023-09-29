@@ -70,6 +70,7 @@ Route::controller(ApiController::class)
 ->group(function () {
     Route::get('/brand-categories', 'brandCategories');
     Route::get('/brand-wise-models', 'brandWiseModels');
+    Route::get('/brand/{id}/brand-category-wise-models', 'brandCategoryWiseModels')->name('brand.category.models');
     Route::get('/models', 'models')->name('all.models');
 });
 

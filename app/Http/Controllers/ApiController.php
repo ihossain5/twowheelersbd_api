@@ -60,8 +60,26 @@ class ApiController extends Controller
 
         return $this->success(BrandWiseModelResource::collection($brands)->response()->getData(true));
 
+    }
 
-     
+    public function brandCategoryWiseModels(Request $request, $id){
+        if($request->pagination) $this->pagination = $request->pagination;
+
+            $brands = BrandCategory::query()->select('id','name')
+            ->where('brand_id',$id)
+            ->with('models');
+           
+
+        if ($brands->count() < 1) {
+            return $this->errorResponse('brand', 'models');
+        }
+
+        $brands = $brands->latest()->paginate($this->pagination);
+
+        // $brand_drop_down = Brand::query()->select('id','name')->where('status',1)->get();
+
+        return $this->success(BrandWiseModelResource::collection($brands)->response()->getData(true));
+
     }
     
 }
