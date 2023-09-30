@@ -86,6 +86,7 @@ Route::controller(BlogController::class)
 ->group(function () {
     Route::get('/blogs', 'blogs');
     Route::get('/blogs/{id}/details', 'details')->name('blog.details');
+    Route::post('/blogs/{id}/add-comment', 'addComment')->middleware('auth.jwt');
 });
 
 Route::controller(UserOrderController::class)
