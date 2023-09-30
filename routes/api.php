@@ -93,6 +93,7 @@ Route::controller(UserOrderController::class)
 ->group(function () {
     Route::get('/all-orders', 'orders');
     Route::get('/ordr-track/{order_id}', 'orderTrack')->name('order.track');
+    Route::get('/ordr-details/{order_id}', 'orderDetails')->name('order.details');
 });
 
 

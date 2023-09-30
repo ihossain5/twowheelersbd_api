@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserOrderDetailResource;
 use App\Http\Resources\UserOrderResource;
 use App\Models\Order;
 use App\Models\UserAddress;
@@ -19,9 +20,8 @@ class UserOrderController extends Controller {
             $this->pagination = $request->pagination;
         }
 
-        $orders = Order::query()
+        $orders = $this->order()
             ->select('order_id', 'status', 'created_at')
-            ->where('user_id', $this->user_id)
             ->when(!empty($request->status), function ($query) use ($request) {
                 $query->where('status', $request->status);
             });
@@ -43,6 +43,16 @@ class UserOrderController extends Controller {
         $order->info = json_decode($address);
 
         return $this->success(new UserOrderResource($order));
+    }
+
+    public function orderDetails($order_id) {
+        $order = $this->order()->with('shop:id,name','items','items.product:id,name,images','user:id,name','user:address')->where('order_id', $order_id)->firstOrFail();
+
+        $address = UserAddress::query()->select('name','email','mobile','address')->where('user_id', $this->user_id)->first();
+
+        $order->info = json_decode($address);
+
+        return $this->success(new UserOrderDetailResource($order));
     }
 
     private function order() {
