@@ -6,6 +6,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\UserOrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -85,6 +86,12 @@ Route::controller(BlogController::class)
 ->group(function () {
     Route::get('/blogs', 'blogs');
     Route::get('/blogs/{id}/details', 'details')->name('blog.details');
+});
+
+Route::controller(UserOrderController::class)
+->middleware('auth.jwt')
+->group(function () {
+    Route::get('/all-orders', 'orders');
 });
 
 
