@@ -39,7 +39,12 @@ Route::controller(AuthController::class)
 ->prefix('auth')
 ->middleware('api')
 ->group(function () {
+    Route::post('/register', 'register')->name('user.register');
     Route::post('/login', 'login')->name('user.login');
+    Route::post('/verify-otp', 'verifyOtp')->name('user.otp.verify');
+
+
+
     Route::post('/logout', 'logout')->name('user.logout');
     // Route::post('/refresh', 'refresh');
     Route::post('/me', 'getProfile')->middleware('auth.jwt')->name('user.profile');

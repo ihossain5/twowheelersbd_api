@@ -84,7 +84,11 @@ class Handler extends ExceptionHandler {
         } elseif ($e instanceof ShopNotNullException) {
 
             return $this->errorResponse($e, 'Please create your shop first', 403);
-        } else {
+        }elseif ($e instanceof UserNotVerifyException) {
+
+            return $this->errorResponse($e, 'Please verify your account', 503);
+        }  
+        else {
             return $this->errorResponse($e, $e->getFile() . $e->getLine());
         }
     }

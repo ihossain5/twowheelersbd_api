@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\InvalidAuthenticateException;
+use App\Exceptions\UserNotVerifyException;
 use App\Http\Controllers\Utility\Utils;
 use App\Models\ShopOwner;
 use App\Models\User;
@@ -24,6 +25,8 @@ class AuthService
         $user = auth($type)->user();
         $user->device_id = $request_data['device_id'];
         $user->save();
+
+        if( $type == null && $user->is_verified == 0) throw new UserNotVerifyException('Account Not Verify');
 
         return $this->respondWithToken($token, $type);
     }
@@ -48,13 +51,14 @@ class AuthService
             $data = new User();
             $data->name = $request_data['name'];
             $data->mobile = $request_data['mobile'];
+            $data->email = $request_data['email'];
             $data->password = $request_data['password'];
             $data->otp_code = $otp;
             $data->otp_expire_time = $exprireTime;
             $data->save();
-        }
 
-        $sms = Utils::sendSms($request_data['mobile'],'Your otp code is '. $otp);
+            $sms = Utils::sendSms($request_data['mobile'],'Your otp code is '. $otp);
+        }
 
         $token = Auth::guard($type)->login($data);
 

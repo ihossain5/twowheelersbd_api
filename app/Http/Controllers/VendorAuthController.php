@@ -25,7 +25,7 @@ class VendorAuthController extends Controller
         $request->validate([
             'mobile' => 'required',
             'password' => 'required',
-            // 'device_id' => 'required',
+            'device_id' => 'required',
         ]);
 
         return $this->success(new VendorResource($this->auth->login($request->all(),'vendor')));
