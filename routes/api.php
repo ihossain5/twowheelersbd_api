@@ -41,8 +41,10 @@ Route::controller(AuthController::class)
 ->group(function () {
     Route::post('/register', 'register')->name('user.register');
     Route::post('/login', 'login')->name('user.login');
-    Route::post('/verify-otp', 'verifyOtp')->name('user.otp.verify');
-
+    Route::post('/register-verify-otp', 'registerOtpVerify')->name('user.otp.verify');
+    Route::post('/forget-password', 'forgetPassword')->name('user.forget.password');
+    Route::post('/forget-password-verify-otp', 'forgetPasswordOtpVerify')->name('user.forget.password.verify.otp');
+    Route::post('/recover-password', 'recoverPassword')->name('user.recover.password');
 
 
     Route::post('/logout', 'logout')->name('user.logout');

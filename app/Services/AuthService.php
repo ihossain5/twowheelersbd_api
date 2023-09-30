@@ -65,7 +65,7 @@ class AuthService
         return $this->respondWithToken($token,$type);
     }
 
-    public function forgotPassword($type,$mobile){
+    public function forgotPassword($mobile, $type = null){
         $exprireTime = Carbon::now()->addMinute(5);
         $otp = generateOtp();
 

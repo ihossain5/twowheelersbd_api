@@ -50,16 +50,8 @@ class AuthController extends Controller
     }
 
     
-    public function verifyOtp(Request $request){
-        $request->validate([
-            'id' => 'required',
-            'otp' => 'required|string|max:4',
-        ]);
-        
-        $user = User::query()->where('id',$request->id)->where('otp_code',$request->otp)->first();
-        if(!$user){
-            throw new InvalidOtpException('Otp mismatch');
-        }
+    public function registerOtpVerify(Request $request){
+        $user = $this->verifyOtp($request); 
 
         $user->is_verified = 1;
         $user->save();
@@ -68,6 +60,41 @@ class AuthController extends Controller
 
         $user->token = $token;
         $user->token_type = 'bearer';
+
+        return $this->success(new UserResource($user));
+    }
+
+    public function forgetPassword(Request $request){
+        $request->validate([
+            'mobile' => 'required|exists:users,mobile',
+        ]);
+
+        $data = $this->auth->forgotPassword($request->mobile);
+
+        return $this->success('Otp has sent to given number. User Id is '.$data->id);
+    }
+
+    public function forgetPasswordOtpVerify(Request $request){
+        $user = $this->verifyOtp($request); 
+
+        return $this->success('Successfully otp verified! user ID: '.$user->id);
+    }
+
+    public function recoverPassword(Request $request){
+        $request->validate([
+            'id' => 'required',
+            'device_id' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::findOrFail($request->id);
+
+        $user->password = $request->password;
+        $user->device_id = $request->device_id;
+        $user->save();
+
+        $token = Auth::login($user);
+        $user->token = $token;
 
         return $this->success(new UserResource($user));
     }
@@ -92,6 +119,20 @@ class AuthController extends Controller
         auth()->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    public function verifyOtp($request){
+        $request->validate([
+            'id' => 'required',
+            'otp' => 'required|string|max:4',
+        ]);
+        
+        $user = User::query()->where('id',$request->id)->where('otp_code',$request->otp)->first();
+        if(!$user){
+            throw new InvalidOtpException('Otp mismatch');
+        }
+
+        return $user;
     }
 
 

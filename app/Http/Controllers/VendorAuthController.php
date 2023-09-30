@@ -78,12 +78,14 @@ class VendorAuthController extends Controller
     public function recoverPassword(Request $request){
         $request->validate([
             'id' => 'required',
+            'device_id' => 'required',
             'password' => 'required|min:8|confirmed',
         ]);
 
         $vendor = ShopOwner::findOrFail($request->id);
 
         $vendor->password = $request->password;
+        $vendor->device_id = $request->device_id;
         $vendor->save();
 
         $token = Auth::guard('vendor')->login($vendor);
