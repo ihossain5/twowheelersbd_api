@@ -92,6 +92,7 @@ Route::controller(UserOrderController::class)
 ->middleware('auth.jwt')
 ->group(function () {
     Route::get('/all-orders', 'orders');
+    Route::get('/ordr-track/{order_id}', 'orderTrack')->name('order.track');
 });
 
 

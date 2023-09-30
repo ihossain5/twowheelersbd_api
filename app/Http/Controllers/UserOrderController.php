@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserOrderResource;
 use App\Models\Order;
+use App\Models\UserAddress;
 use Illuminate\Http\Request;
 
 class UserOrderController extends Controller {
@@ -32,5 +33,19 @@ class UserOrderController extends Controller {
         $orders = $orders->latest()->paginate($this->pagination);
 
         return $this->success(UserOrderResource::collection($orders)->response()->getData(true));
+    }
+
+    public function orderTrack($order_id) {
+        $order = $this->order()->where('order_id', $order_id)->firstOrFail();
+
+        $address = UserAddress::query()->select('name','email','mobile','address')->where('user_id', $this->user_id)->first();
+
+        $order->info = json_decode($address);
+
+        return $this->success(new UserOrderResource($order));
+    }
+
+    private function order() {
+        return Order::query()->where('user_id', $this->user_id);
     }
 }
