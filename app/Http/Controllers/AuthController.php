@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\InvalidOtpException;
 use App\Exceptions\UserNotVerifyException;
+use App\Http\Resources\UserBikeInfoResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\UserBikeInfo;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -135,5 +137,11 @@ class AuthController extends Controller
         return $user;
     }
 
+    public function getBikeInfo()
+    {
+        $bike_info = UserBikeInfo::query()->where('user_id',auth()->user()->id)->first();
+
+        return $this->success(new UserBikeInfoResource($bike_info));
+    }
 
 }
