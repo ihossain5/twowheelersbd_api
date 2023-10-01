@@ -72,6 +72,7 @@ Route::controller(ShopController::class)
     Route::get('/shop/{id}/videos', 'shopVideos');
     Route::get('/shop/{id}/reviews', 'shopReviews');
     Route::get('/single-shop/{id}/details', 'singleShop')->name('shop.details');
+    Route::post('/shop/{id}/add-review', 'storeRating')->middleware('jwt.auth');
 });
 
 Route::controller(ApiController::class)
