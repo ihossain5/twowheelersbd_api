@@ -52,6 +52,7 @@ Route::controller(AuthController::class)
     // Route::post('/refresh', 'refresh');
     Route::get('/get-user-info', 'getProfile')->middleware('auth.jwt')->name('user.profile');
     Route::get('/get-bike-info', 'getBikeInfo')->middleware('auth.jwt')->name('user.bike.info');
+    Route::post('/store-bike-info', 'storeBikeInfo')->middleware('auth.jwt')->name('user.bike.info.store');
 
 
 });

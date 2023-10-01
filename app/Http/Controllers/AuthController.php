@@ -143,5 +143,22 @@ class AuthController extends Controller
 
         return $this->success(new UserBikeInfoResource($bike_info));
     }
+    
+    public function storeBikeInfo(Request $request){
+        $this->validate($request,['brand_id' => 'required', 'model_id' => 'required', 'name' => 'required' ]);
 
+        $bike_info = UserBikeInfo::query()->where('user_id',auth()->user()->id)->first();
+
+        if(!$bike_info){
+            $bike_info = new UserBikeInfo();
+        }
+    
+        $bike_info->user_id = auth()->user()->id;
+        $bike_info->brand_id = $request->brand_id;
+        $bike_info->model_id = $request->model_id;
+        $bike_info->name = $request->name;
+        $bike_info->save();
+
+        return $this->success(new UserBikeInfoResource($bike_info));
+    }
 }
