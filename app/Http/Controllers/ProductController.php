@@ -9,6 +9,7 @@ use App\Models\HotDealProduct;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\ProductReview;
 use App\Models\SubCategory;
 use App\Services\ProductService;
 use Carbon\Carbon;
@@ -202,6 +203,20 @@ class ProductController extends Controller {
         ->findOrFail($id);
 
         return  $this->success(new MotorbikeDetailsResource($motorbike));
+    }
+
+    public function storeRating($id, Request $request) {
+        $this->validate($request,['rating'=> 'required','review'=> 'required']);
+
+        $shop = Product::findOrFail($id);
+        $review          = new ProductReview();
+        $review->product_id = $id;
+        $review->user_id = auth()->user()->id;
+        $review->rating  = $request->rating;
+        $review->review  = $request->review;
+        $review->save();
+
+        return $this->success('Review has been added successfully');
     }
     
 }

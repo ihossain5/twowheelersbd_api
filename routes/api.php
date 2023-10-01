@@ -115,6 +115,8 @@ Route::controller(ProductController::class)
     Route::get('/accessories', 'accessories')->name('all.accessories');
     Route::get('/model/{id}/motorbikes', 'motorbikes')->name('model.motorbikes');
     Route::get('/motorbikes/{id}/details', 'motorbikeDetails')->name('motorbikes.details');
+
+    Route::post('/product/{id}/add-review', 'storeRating')->middleware('jwt.auth');
 });
 
 Route::fallback(function(){
