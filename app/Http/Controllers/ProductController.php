@@ -103,7 +103,7 @@ class ProductController extends Controller {
             $this->pagination = $request->pagination;
         }
 
-        $product_ids = HotDealProduct::query()->where('hot_deal_id',$id)->pluck('product_id');
+        $product_ids = HotDealProduct::query()->where('hot_deal_id', $id)->pluck('product_id');
 
         $products = $this->productService->condition()->whereIn('id', $product_ids);
 
@@ -121,9 +121,9 @@ class ProductController extends Controller {
             $this->pagination = $request->pagination;
         }
 
-        $order_ids = Order::where('shop_id',$id)->pluck('id');
+        $order_ids = Order::where('shop_id', $id)->pluck('id');
 
-        $product_ids = OrderItem::whereIn('order_id',$order_ids)->pluck('product_id')->unique();
+        $product_ids = OrderItem::whereIn('order_id', $order_ids)->pluck('product_id')->unique();
 
         $products = $this->productService->condition()->whereIn('id', $product_ids);
 
@@ -152,22 +152,23 @@ class ProductController extends Controller {
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    
-    public function getProductById($id){
+    public function getProductById($id) {
         $product = Product::query()
-            ->select('id','sub_category_id', 'shop_id', 'additional_name_1', 'additional_name_2', 'additional_name_3', 'additional_name_4','additional_name_5', 'colors', 'description', 'video', 'sizes','catelogue_pdf', 'name','quantity','discount','regular_price','images','sku','selling_price', 'average_rating')
+            ->select('id', 'sub_category_id', 'shop_id', 'additional_name_1', 'additional_name_2', 'additional_name_3', 'additional_name_4', 'additional_name_5', 'colors', 'description', 'video', 'sizes', 'catelogue_pdf', 'name', 'quantity', 'discount', 'regular_price', 'images', 'sku', 'selling_price', 'average_rating')
             ->withCount('reviews')
-            ->with('subcategory:id,category_id,name','subcategory.category:id,name','shop:id,name','catelogues','specifications','motors','reviews')
+            ->with('subcategory:id,category_id,name', 'subcategory.category:id,name', 'shop:id,name', 'catelogues', 'specifications', 'motors', 'reviews')
             ->findOrFail($id);
 
         return $this->success(new ProductResource($product));
     }
 
-    public function accessories(Request $request){
-        if($request->pagination) $this->pagination = $request->pagination;
+    public function accessories(Request $request) {
+        if ($request->pagination) {
+            $this->pagination = $request->pagination;
+        }
 
         $subcategories = SubCategory::query()->where('category_id', 8)->pluck('id');
-        
+
         $products = $this->productService->condition()->whereIn('sub_category_id', $subcategories);
 
         if ($products->count() < 1) {
@@ -176,14 +177,16 @@ class ProductController extends Controller {
 
         $products = $products->latest()->paginate($this->pagination);
 
-        return  $this->success(ProductResource::collection($products)->response()->getData(true));
+        return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function motorbikes($id,Request $request){
-        if($request->pagination) $this->pagination = $request->pagination;
+    public function motorbikes($id, Request $request) {
+        if ($request->pagination) {
+            $this->pagination = $request->pagination;
+        }
 
         $model = BrandModel::query()->where('id', $id)->pluck('id');
-        
+
         $products = $this->productService->condition(1)->whereIn('brand_model_id', $model);
 
         if ($products->count() < 1) {
@@ -192,31 +195,69 @@ class ProductController extends Controller {
 
         $products = $products->latest()->paginate($this->pagination);
 
-        return  $this->success(ProductResource::collection($products)->response()->getData(true));
+        return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function motorbikeDetails($id){
+    public function motorbikeDetails($id) {
         $motorbike = Product::query()
-        ->select('id','sub_category_id', 'brand_model_id', 'shop_id', 'description','video','catelogue_pdf', 'name','quantity','discount','regular_price','images','sku','selling_price', 'average_rating','mileage')
-        ->withCount('reviews')
-        ->with('subcategory:id,category_id,name','subcategory.category:id,name','shop:id,name','catelogues','specifications','reviews','model:id','model.products')
-        ->findOrFail($id);
+            ->select('id', 'sub_category_id', 'brand_model_id', 'shop_id', 'description', 'video', 'catelogue_pdf', 'name', 'quantity', 'discount', 'regular_price', 'images', 'sku', 'selling_price', 'average_rating', 'mileage')
+            ->withCount('reviews')
+            ->with('subcategory:id,category_id,name', 'subcategory.category:id,name', 'shop:id,name', 'catelogues', 'specifications', 'reviews', 'model:id', 'model.products')
+            ->findOrFail($id);
 
-        return  $this->success(new MotorbikeDetailsResource($motorbike));
+        return $this->success(new MotorbikeDetailsResource($motorbike));
     }
 
     public function storeRating($id, Request $request) {
-        $this->validate($request,['rating'=> 'required','review'=> 'required']);
+        $this->validate($request, ['rating' => 'required', 'review' => 'required']);
 
-        $shop = Product::findOrFail($id);
-        $review          = new ProductReview();
+        $shop               = Product::findOrFail($id);
+        $review             = new ProductReview();
         $review->product_id = $id;
-        $review->user_id = auth()->user()->id;
-        $review->rating  = $request->rating;
-        $review->review  = $request->review;
+        $review->user_id    = auth()->user()->id;
+        $review->rating     = $request->rating;
+        $review->review     = $request->review;
         $review->save();
 
         return $this->success('Review has been added successfully');
     }
-    
+
+    public function filterProducts(Request $request) {
+        if ($request->pagination) {
+            $this->pagination = $request->pagination;
+        }
+
+        $products = $this->productService->condition()
+            ->when($request->brand_id != null, function ($query) use ($request) {
+                $query->where('brand_id', $request->brand_id);
+            })
+            ->when($request->model_id != null, function ($query) use ($request) {
+                $query->where('brand_model_id', $request->model_id);
+            })
+            ->when($request->has('category_id') && request('category_id') != 'ALL', function ($query) use ($request) {
+                $ids = SubCategory::query()->where('category_id', $request->category_id)->pluck('id');
+                $query->whereIn('sub_category_id', $ids);
+            })
+            ->when($request->has('subcategory_id') && request('subcategory_id') != null, function ($query) use ($request) {
+                $query->where('sub_category_id', $request->subcategory_id);
+            })
+            ->when($request->has('shop_id') && request('shop_id') != null, function ($query) use ($request) {
+                $query->where('shop_id', $request->shop_id);
+            })
+            ->when($request->has('sort_by') && request('sort_by') == 'price_low', function ($query){
+                $query->orderBy('selling_price', 'ASC');
+            })
+            ->when($request->has('sort_by') && request('sort_by') == 'price_high', function ($query){
+                $query->orderBy('selling_price', 'DESC');
+            });
+
+        if ($products->count() < 1) {
+            return $this->errorResponse('', 'Product');
+        }
+
+        $products = $products->latest()->paginate($this->pagination);
+
+        return $this->success(ProductResource::collection($products)->response()->getData(true));
+    }
+
 }
