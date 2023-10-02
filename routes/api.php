@@ -22,9 +22,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 Route::get('/clear-cache/',function(){
     $configCache = Artisan::call('config:cache');
@@ -51,6 +48,7 @@ Route::controller(AuthController::class)
     Route::post('/logout', 'logout')->name('user.logout');
     // Route::post('/refresh', 'refresh');
     Route::get('/get-user-info', 'getProfile')->middleware('auth.jwt')->name('user.profile');
+    Route::post('/update-user-info', 'updateProfie')->middleware('auth.jwt')->name('user.profile.update');
     Route::get('/get-bike-info', 'getBikeInfo')->middleware('auth.jwt')->name('user.bike.info');
     Route::post('/store-bike-info', 'storeBikeInfo')->middleware('auth.jwt')->name('user.bike.info.store');
 

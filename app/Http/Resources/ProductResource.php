@@ -23,6 +23,7 @@ class ProductResource extends JsonResource {
                 'rating'            => $this->average_rating,
                 'total_reviews'     => $this->reviews_count,
                 'category'          => $this->subcategory->category->name,
+                'shop_id'           => $this->shop->id,
                 'shop'              => $this->shop->name,
                 'shop_logo'         => $this->shop->logo,
                 'description'       => $this->description,

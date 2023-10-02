@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Models\UserBikeInfo;
 use App\Services\AuthService;
+use App\Services\ImageUoloadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -160,5 +161,23 @@ class AuthController extends Controller
         $bike_info->save();
 
         return $this->success(new UserBikeInfoResource($bike_info));
+    }
+
+    public function updateProfie(Request $request){
+        $this->validate($request,['name'=> 'required']);
+        
+        $user = auth()->user();
+        $image = $user->photo;
+
+        if($request->image){
+            if($image) (new ImageUoloadService())->deleteImage($image);
+            $image = (new ImageUoloadService())->storeImage($request->image, 'user/',300,300);
+        }
+
+        $user->photo = $image;
+        $user->name = $request->name;
+        $user->save();
+
+        return $this->success(new UserResource($user));
     }
 }
