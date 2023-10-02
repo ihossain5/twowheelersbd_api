@@ -27,7 +27,7 @@ Route::controller(VendorController::class)
         Route::post('/shop/coupons/create', 'createCoupon')->name('vendor.shop.create');
         Route::get('/shop/coupons/edit/{id}', 'editCoupon')->name('vendor.shop.edit');
         Route::post('/shop/coupons/update/{id}', 'updateCoupon')->name('vendor.shop.update');
-        Route::delete('/shop/coupons/delete/{id}', 'deleteCoupon')->name('vendor.shop.update');
+        Route::delete('/shop/coupons/delete/{id}', 'deleteCoupon');
         Route::get('/shop/reviews', 'shopReviews')->name('vendor.shop.review');
         Route::post('/shop/reviews/approve/{id}', 'approveRating')->name('vendor.shop.review.approve');
     });
