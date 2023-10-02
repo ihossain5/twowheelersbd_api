@@ -165,16 +165,17 @@ class AuthController extends Controller
 
     public function updateProfie(Request $request){
         $this->validate($request,['name'=> 'required']);
-        
+
         $user = auth()->user();
         $image = $user->photo;
 
         if($request->image){
             if($image) (new ImageUoloadService())->deleteImage($image);
             $image = (new ImageUoloadService())->storeImage($request->image, 'user/',300,300);
+            $user->photo = $image;
         }
 
-        $user->photo = $image;
+     
         $user->name = $request->name;
         $user->save();
 
