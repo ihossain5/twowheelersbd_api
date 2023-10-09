@@ -123,5 +123,5 @@ Route::controller(ProductController::class)
 
 Route::fallback(function(){
     return response()->json([
-        'message' => 'Page Not Found. If error persists, contact with site owner'], 403);
+        'message' => 'Page Not Found. If error persists, contact with site owner'], 404);
 });
