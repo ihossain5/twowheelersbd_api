@@ -3,7 +3,14 @@
 use Carbon\Carbon;
 
 function BASE_URL(){
-    return 'http://127.0.0.1:8000/admin/images/';
+
+    $base_url = 'http://127.0.0.1:8000/admin/images/';
+
+    if(config('app.env') == 'production') {
+        $base_url = 'https://twowheelersbd.com/admin/images/';
+    }
+
+    return $base_url;
 }
 
 function addUrl($images){
