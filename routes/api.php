@@ -60,7 +60,8 @@ Route::controller(HomeController::class)
     Route::get('/sliders', 'sliders');
     Route::get('/hot-deals', 'hotDeals');
     Route::get('/categories', 'categories')->name('categories');
-    Route::get('/brands', 'brands');
+    Route::get('/brands', 'brands')->name('brands');
+    Route::get('/all-brands', 'allBrands')->name('all.brands');
     Route::get('/shops', 'shops');
     Route::get('/motorbike-models', 'motorbikeModels');
   

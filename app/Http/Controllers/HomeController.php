@@ -64,6 +64,15 @@ class HomeController extends Controller
             ->paginate($this->pagination);
             
         return  $this->success(BrandResource::collection($brands)->response()->getData(true));
+    }    
+    public function allBrands(Request $request){
+        if($request->pagination) $this->pagination = $request->pagination;
+
+        $brands = Brand::query()
+            ->select('id','photo','name')
+            ->where('status',1);
+    
+        return $this->success(BrandResource::collection($brands));
     }
 
     public function shops(Request $request){
