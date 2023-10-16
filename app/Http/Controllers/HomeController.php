@@ -70,7 +70,8 @@ class HomeController extends Controller
 
         $brands = Brand::query()
             ->select('id','photo','name')
-            ->where('status',1);
+            ->where('status',1)
+            ->get();
     
         return $this->success(BrandResource::collection($brands));
     }
