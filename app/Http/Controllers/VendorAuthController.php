@@ -49,7 +49,7 @@ class VendorAuthController extends Controller
             'mobile' => 'required|exists:shop_owners,mobile',
         ]);
 
-        $data = $this->auth->forgotPassword('vendor',$request->mobile);
+        $data = $this->auth->forgotPassword($request->mobile,'vendor');
 
         return $this->success('Otp has sent to given number. Vendor Id is '.$data->id);
     }
