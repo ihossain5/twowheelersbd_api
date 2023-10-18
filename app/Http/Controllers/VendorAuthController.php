@@ -117,12 +117,13 @@ class VendorAuthController extends Controller
             'mobile' => 'required|string|max:255|unique:shop_owners,mobile, '. $vendor->id,
         ]);
 
-        $photo = $vendor->photo;
 
         if($request->photo){
             if($vendor) ( new ImageUoloadService())->deleteImage($vendor->photo);
 
             $photo = ( new ImageUoloadService())->storeImage($request->photo,'vendor/',50,50);
+
+            $vendor->photo = $photo;
         }
 
         $vendor->name = $request->name;
@@ -130,7 +131,6 @@ class VendorAuthController extends Controller
         $vendor->mobile = $request->mobile;
         $vendor->address = $request->address;
         $vendor->email = $request->email;
-        $vendor->photo = $photo;
         $vendor->save();
 
 

@@ -21,7 +21,7 @@ class MotorbikeController extends Controller {
         $this->shop_id = auth('vendor')->user()?->shop?->id;
     }
 
-    public function motorbikes(MotorbikeStoreRequest $request) {
+    public function motorbikes(Request $request) {
         $products = Product::query()->select('id', 'name', 'images', 'sub_category_id', 'sku', 'quantity', 'selling_price', 'is_visible', 'status')
             ->where('shop_id', $this->shop_id)
             ->where('is_motorbike', 1)
