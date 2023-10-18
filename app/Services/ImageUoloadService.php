@@ -16,7 +16,7 @@ class ImageUoloadService
         $ext = strtolower($image->getClientOriginalExtension());
         $image_full_name = $image_name . '.' . $ext;
         $upload_path = $path;
-        $upload_path1 = $this->url . $path;
+        $upload_path1 = Image_BASE_URL() . $path;
         $image_url = $upload_path . $image_full_name;
         // $success         = $image->move($upload_path1, $image_full_name);
         $img = Image::make($image)->resize($width, $height);

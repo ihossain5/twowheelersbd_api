@@ -13,6 +13,17 @@ function BASE_URL(){
     return $base_url;
 }
 
+function Image_BASE_URL(){
+
+    $url = 'images/';
+
+    if(config('app.env') == 'production') {
+        $url = '/home/twowheel/public_html/admin/images/';
+    }
+
+    return $url;
+}
+
 function addUrl($images){
     $data = [];
     foreach ($images as $image){
