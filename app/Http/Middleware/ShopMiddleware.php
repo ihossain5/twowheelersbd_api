@@ -18,7 +18,7 @@ class ShopMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-       if(Auth::guard('vendor')->user()->shop !== null) return $next($request);
+       if(Auth::guard('vendor')->user()?->shop !== null) return $next($request);
        
        throw new ShopNotNullException('Forbidden!');
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductEditResource;
+use App\Http\Resources\ReviewResource;
 use App\Http\Resources\VendoCategoryResource;
 use App\Http\Resources\VendoProductResource;
 use App\Models\Brand;
@@ -15,6 +16,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductCatelogue;
 use App\Models\ProductMotor;
+use App\Models\ProductReview;
 use App\Models\ProductSpecification;
 use App\Models\Specification;
 use App\Models\SubCategory;
@@ -38,6 +40,15 @@ class ProductController extends Controller {
 
     public function subcategories($id) {
         return $this->success(SubCategory::query()->select('id', 'name')->where('category_id', $id)->get());
+    }
+
+    public function productReviews($id) {
+        $reviews = ProductReview::query()->where('product_id',$id)->get();
+
+        if($reviews->count() < 1 ){
+            return $this->errorResponse($id,'Product');
+        }
+        return $this->success(ReviewResource::collection($reviews));
     }
 
     public function brands() {

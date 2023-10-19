@@ -65,6 +65,7 @@ Route::controller(ProductController::class)
         Route::post('/products/store', 'productStore')->name('vendor.product.store');
         Route::get('/products/edit/{id}', 'productEdit')->name('vendor.product.edit');
         Route::delete('/products/delete/{id}', 'productDelete')->name('vendor.product.delete');
+        
         Route::post('/products/update/{id}', 'productUpdate')->name('vendor.product.update');
         Route::get('/all-category', 'categories')->name('vendor.all.categories');
         Route::get('/category/{id}/subcategory', 'subcategories')->name('vendor.all.subcategories');
@@ -72,6 +73,8 @@ Route::controller(ProductController::class)
         Route::get('/brand/{id}/models', 'brandModels')->name('vendor.all.model');
         Route::get('/all-specifications', 'specifications')->name('vendor.all.specifications');
         Route::delete('/motorbikes/delete/{id}', 'productDelete')->name('vendor.motorbike.delete');
+
+        Route::get('/products/{id}/reviews', 'productReviews')->name('vendor.product.reviews');
     });
 
 Route::controller(MotorbikeController::class)
