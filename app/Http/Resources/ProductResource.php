@@ -59,6 +59,7 @@ class ProductResource extends JsonResource {
             'discounted_price' => $this->selling_price,
             'discount'         => $this->discount,
             'rating'           => $this->average_rating,
+            'quantity'         => $this->quantity,
         ];
     }
 }
