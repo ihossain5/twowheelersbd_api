@@ -53,6 +53,17 @@ class HomeController extends Controller
         
         return  $this->success(CategoryResource::collection($categories));
 
+    }   
+     
+    public function allCategories(){
+
+        $categories = Category::query()
+            ->select('id','name')
+            ->where('status',1)
+            ->get();
+        
+        return  $this->success($categories);
+
     }
 
     public function brands(Request $request){
