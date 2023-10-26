@@ -57,7 +57,7 @@ Route::controller(AuthController::class)
 
 Route::controller(HomeController::class)
 ->group(function () {
-    Route::get('/sliders', 'sliders');
+    // Route::get('/sliders', 'sliders');
     Route::get('/hot-deals', 'hotDeals');
     Route::get('/categories', 'categories')->name('categories');
     Route::get('/all-categories', 'allCategories')->name('all.categories');
