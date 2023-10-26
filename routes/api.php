@@ -121,6 +121,7 @@ Route::controller(ProductController::class)
     Route::post('/product/{id}/add-review', 'storeRating')->middleware('jwt.auth');
 
     Route::get('/filter-products', 'filterProducts');
+    Route::get('/search-products', 'searchProducts');
 });
 
 Route::fallback(function(){

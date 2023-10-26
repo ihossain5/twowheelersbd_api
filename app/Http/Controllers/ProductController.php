@@ -260,4 +260,19 @@ class ProductController extends Controller {
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
+    public function searchProducts(Request $request){
+        $products = $this->productService->condition()
+        ->where('name', 'like', '%'.$request->search.'%')
+        ->orWhere('sku', 'like', '%'.$request->search.'%')
+        ->orWhere('additional_name_1', 'like', '%'.$request->search.'%')
+        ->orWhere('additional_name_2', 'like', '%'.$request->search.'%')
+        ->orWhere('additional_name_3', 'like', '%'.$request->search.'%')
+        ->orWhere('additional_name_4', 'like', '%'.$request->search.'%')
+        ->orWhere('additional_name_5', 'like', '%'.$request->search.'%');
+
+        $products = $products->latest()->paginate($this->pagination);
+
+        return $this->success(ProductResource::collection($products)->response()->getData(true));
+    }
+
 }
