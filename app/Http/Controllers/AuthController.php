@@ -47,8 +47,11 @@ class AuthController extends Controller
             ]);
     
             $user = $this->auth->register($request->all());
+
+            $data['message'] = 'Successfully registered! Please verify your account by providing otp';
+            $data['user_id'] = $user->id;
     
-            return $this->success('Successfully registered! Please verify your account by providing otp. User Id is '.$user->id);
+            return $this->success($data);
         }
     }
 
@@ -74,7 +77,10 @@ class AuthController extends Controller
 
         $data = $this->auth->forgotPassword($request->mobile);
 
-        return $this->success('Otp has sent to given number. User Id is '.$data->id);
+        $arry['message'] = 'Otp has sent to given number';
+        $arry['user_id'] = $data->id;
+
+        return $this->success($arry);
     }
 
     public function forgetPasswordOtpVerify(Request $request){
