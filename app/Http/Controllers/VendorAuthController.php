@@ -51,7 +51,10 @@ class VendorAuthController extends Controller
 
         $data = $this->auth->forgotPassword($request->mobile,'vendor');
 
-        return $this->success('Otp has sent to given number. Vendor Id is '.$data->id);
+        $arr['message'] = 'Otp has sent to given number.';
+        $arr['vendor_id'] = $data->id;
+
+        return $this->success($arr);
     }
 
     public function verifyOtp(Request $request){
@@ -65,7 +68,10 @@ class VendorAuthController extends Controller
             throw new InvalidOtpException('Otp mismatch');
         }
 
-        return $this->success('Successfully otp verified! vendor ID: '.$vendor->id);
+        $arr['message'] = 'Successfully otp verified.';
+        $arr['vendor_id'] = $vendor->id;
+
+        return $this->success($arr);
 
         // $token = Auth::guard('vendor')->login($vendor);
 
