@@ -154,9 +154,9 @@ class ProductController extends Controller {
 
     public function getProductById($id) {
         $product = Product::query()
-            ->select('id', 'sub_category_id', 'shop_id', 'additional_name_1', 'additional_name_2', 'additional_name_3', 'additional_name_4', 'additional_name_5', 'colors', 'description', 'video', 'sizes', 'catelogue_pdf', 'name', 'quantity', 'discount', 'regular_price', 'images', 'sku', 'selling_price', 'average_rating')
+            ->select('id', 'sub_category_id', 'shop_id', 'brand_id', 'additional_name_1', 'additional_name_2', 'additional_name_3', 'additional_name_4', 'additional_name_5', 'colors', 'description', 'video', 'sizes', 'catelogue_pdf', 'name', 'quantity', 'discount', 'regular_price', 'images', 'sku', 'selling_price', 'average_rating')
             ->withCount('reviews')
-            ->with('subcategory:id,category_id,name', 'subcategory.category:id,name', 'shop:id,name', 'catelogues', 'specifications', 'motors', 'reviews')
+            ->with('subcategory:id,category_id,name', 'subcategory.category:id,name', 'shop:id,name,logo', 'catelogues', 'specifications', 'motors', 'reviews')
             ->findOrFail($id);
 
         return $this->success(new ProductResource($product));
