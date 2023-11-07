@@ -70,7 +70,6 @@ class Handler extends ExceptionHandler {
 
             return $this->errorResponse($e, 'Token has Expired', 401);
         } elseif ($e instanceof JWTException) {
-            dd($e);
             return $this->errorResponse($e, 'Token not provided', 401);
         } elseif ($e instanceof InvalidAuthenticateException) {
 

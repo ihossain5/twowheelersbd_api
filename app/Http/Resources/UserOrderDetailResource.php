@@ -14,7 +14,9 @@ class UserOrderDetailResource extends JsonResource {
     public function toArray(Request $request): array {
         return [
             'order_id'               => $this->order_id,
-            'order_note'             => $this->note,
+            'order_note'             => $this->note ?? 'N/A',
+            'order_refund_note'      => $this->refund_cause ?? 'N/A',
+            'order_cancelation_cause'=> $this->cancelation_cause ?? 'N/A',
             'status'                 => $this->status,
             'payment_method'         => $this->payment_method,
             'order_date'             => formatDate($this->created_at),
@@ -25,7 +27,7 @@ class UserOrderDetailResource extends JsonResource {
             'delivery_charge'        => $this->delivery_charge,
             'discount'               => $this->discount,
             'total'                  => $this->total,
-            'shipping_address'       => new OrderUserResource($this->user->address->first()),
+            'shipping_address'       => new UserAddressResource($this->user->address->first()),
         ];
     }
 }

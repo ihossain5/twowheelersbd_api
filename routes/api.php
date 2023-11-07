@@ -98,8 +98,10 @@ Route::controller(UserOrderController::class)
 ->middleware('auth.jwt')
 ->group(function () {
     Route::get('/all-orders', 'orders');
-    Route::get('/ordr-track/{order_id}', 'orderTrack')->name('order.track');
-    Route::get('/ordr-details/{order_id}', 'orderDetails')->name('order.details');
+    Route::get('/order-track/{order_id}', 'orderTrack')->name('order.track');
+    Route::get('/order-details/{order_id}', 'orderDetails')->name('order.details');
+    Route::post('/cancel-order/{order_id}', 'orderCancel')->name('order.cancel');
+    Route::post('/refund-request-order/{order_id}', 'refundRequestOrder')->name('order.refund.request');
 });
 
 
@@ -123,6 +125,7 @@ Route::controller(ProductController::class)
     Route::post('/product/{id}/add-review', 'storeRating')->middleware('jwt.auth');
 
     Route::get('/filter-products', 'filterProducts');
+    Route::get('/search-products', 'searchProducts');
 });
 
 Route::fallback(function(){

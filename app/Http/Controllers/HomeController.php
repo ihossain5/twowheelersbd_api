@@ -90,7 +90,7 @@ class HomeController extends Controller
     public function shops(Request $request){
         if($request->pagination) $this->pagination = $request->pagination;
 
-            $shops = Shop::query()->select('id','shop_owner_id','logo','name','photo','discription','division','commission_rate')
+            $shops = Shop::query()->select('id','shop_owner_id','logo','name','photo','discription','division','commission_rate','average_rating','status')
             ->with('owner')
             ->where('status','APPROVED')
             ->paginate($this->pagination);

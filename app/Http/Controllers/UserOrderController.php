@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\OrderStatus;
 use App\Http\Resources\UserOrderDetailResource;
 use App\Http\Resources\UserOrderResource;
 use App\Models\Order;
@@ -46,13 +47,35 @@ class UserOrderController extends Controller {
     }
 
     public function orderDetails($order_id) {
-        $order = $this->order()->with('shop:id,name','items','items.product:id,name,images','user:id,name','user:address')->where('order_id', $order_id)->firstOrFail();
+        $order = $this->order()->with('shop:id,name','items','items.product:id,name,images,brand_id','items.product.brand:id,name' ,'user:id,name','user:address')->where('order_id', $order_id)->firstOrFail();
 
         $address = UserAddress::query()->select('name','email','mobile','address')->where('user_id', $this->user_id)->first();
 
         $order->info = json_decode($address);
 
         return $this->success(new UserOrderDetailResource($order));
+    }
+
+    public function orderCancel($order_id, Request $request){
+       $this->validate($request,['cancelation_cause'=> 'required']);
+
+       $order =  $this->order()->where('order_id', $order_id)->firstOrFail();
+       $order->status = OrderStatus::CANCELLED;
+       $order->cancelation_cause = $request->cancelation_cause;
+       $order->save();
+
+       return $this->success(new UserOrderDetailResource($order));
+    }   
+    
+    public function refundRequestOrder($order_id, Request $request){
+       $this->validate($request,['refund_cause'=> 'required']);
+
+       $order =  $this->order()->where('order_id', $order_id)->firstOrFail();
+       $order->status = OrderStatus::REFUND_PROCESSING;
+       $order->refund_cause = $request->refund_cause;
+       $order->save();
+
+       return $this->success(new UserOrderDetailResource($order));
     }
 
     private function order() {

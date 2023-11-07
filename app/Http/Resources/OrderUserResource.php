@@ -18,6 +18,7 @@ class OrderUserResource extends JsonResource
             'name'=>$this->name,
             'email'=>$this->email,
             'mobile'=>$this->mobile,
+            'division'=>$this->mobile,
             'address'=>$this->address,
         ];
     }
