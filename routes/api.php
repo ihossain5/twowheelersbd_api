@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserOrderController;
+use App\Http\Controllers\WishlishtController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -92,6 +93,15 @@ Route::controller(BlogController::class)
     Route::get('/blogs', 'blogs');
     Route::get('/blogs/{id}/details', 'details')->name('blog.details');
     Route::post('/blogs/{id}/add-comment', 'addComment')->middleware('auth.jwt');
+});
+
+Route::controller(WishlishtController::class)
+->middleware('auth.jwt')
+->group(function () {
+    Route::get('/all-wishlists', 'wishlists');
+    Route::post('/add-to-wishlist', 'wishlistAdd')->name('wishlist.add');
+    Route::post('/remove-to-wishlist', 'wishlistRemove')->name('wishlist.remove');
+
 });
 
 Route::controller(UserOrderController::class)
