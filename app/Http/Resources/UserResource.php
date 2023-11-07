@@ -20,6 +20,7 @@ class UserResource extends JsonResource {
             'photo'        => $this->photo,
             'mobile'       => $this->mobile,
             'email'        => $this->email,
+            'address'      => new UserAddressResource($this->address()->first()),
         ];
     }
 }

@@ -52,6 +52,8 @@ Route::controller(AuthController::class)
     Route::get('/get-bike-info', 'getBikeInfo')->middleware('auth.jwt')->name('user.bike.info');
     Route::post('/store-bike-info', 'storeBikeInfo')->middleware('auth.jwt')->name('user.bike.info.store');
 
+    Route::post('/user-delivery-address/{id}/update', 'updateDeliveryAddress')->middleware('auth.jwt')->name('user.delivery.address.update');
+
 
 });
 

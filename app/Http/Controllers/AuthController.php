@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\InvalidOtpException;
 use App\Exceptions\UserNotVerifyException;
+use App\Http\Requests\UserAddressRequest;
+use App\Http\Resources\UserAddressResource;
 use App\Http\Resources\UserBikeInfoResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\UserAddress;
 use App\Models\UserBikeInfo;
 use App\Services\AuthService;
 use App\Services\ImageUoloadService;
@@ -86,7 +89,10 @@ class AuthController extends Controller
     public function forgetPasswordOtpVerify(Request $request){
         $user = $this->verifyOtp($request); 
 
-        return $this->success('Successfully otp verified! user ID: '.$user->id);
+        $arry['message'] = 'Successfully otp verified';
+        $arry['user_id'] = $user->id;
+
+        return $this->success($arry);
     }
 
     public function recoverPassword(Request $request){
@@ -186,5 +192,17 @@ class AuthController extends Controller
         $user->save();
 
         return $this->success(new UserResource($user));
+    }
+
+    public function updateDeliveryAddress(UserAddressRequest $request, $id){
+        $address = UserAddress::where('id',$id)->where('user_id',auth()->user()->id)->first();
+
+        if($address){
+            $address->update($request->validated());
+            return $this->success(new UserAddressResource($address));
+        }else{
+            return $this->errorResponse($id,'Address');
+        }
+        
     }
 }
