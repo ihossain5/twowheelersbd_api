@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Constants\OrderStatus;
+use App\Http\Requests\OrderStoreRequest;
 use App\Http\Resources\UserOrderDetailResource;
 use App\Http\Resources\UserOrderResource;
 use App\Models\Order;
 use App\Models\UserAddress;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 
 class UserOrderController extends Controller {
@@ -60,9 +62,8 @@ class UserOrderController extends Controller {
        $this->validate($request,['cancelation_cause'=> 'required']);
 
        $order =  $this->order()->where('order_id', $order_id)->firstOrFail();
-       $order->status = OrderStatus::CANCELLED;
-       $order->cancelation_cause = $request->cancelation_cause;
-       $order->save();
+      
+       (new OrderService())->changeStatus($order, OrderStatus::CANCELLED ,$request->cancelation_cause) ;
 
        return $this->success(new UserOrderDetailResource($order));
     }   
@@ -71,14 +72,17 @@ class UserOrderController extends Controller {
        $this->validate($request,['refund_cause'=> 'required']);
 
        $order =  $this->order()->where('order_id', $order_id)->firstOrFail();
-       $order->status = OrderStatus::REFUND_PROCESSING;
-       $order->refund_cause = $request->refund_cause;
-       $order->save();
+
+       (new OrderService())->changeStatus($order, OrderStatus::REFUND_PROCESSING ,$request->refund_cause) ;
 
        return $this->success(new UserOrderDetailResource($order));
     }
 
     private function order() {
         return Order::query()->where('user_id', $this->user_id);
+    }
+
+    public function orderCreate(OrderStoreRequest $request){
+
     }
 }

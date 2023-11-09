@@ -49,4 +49,20 @@ class CouponController extends Controller
             return $this->error('Invalid coupon provided','Not Found');
         }
     }
+
+    public function removeCoupon(Request $request){
+        $this->validate($request,['coupon_id'=> 'required']);
+
+        $user_coupon = UserCoupon::query()
+        ->where('user_id',auth()->user()->id)
+        ->where('coupon_id',$request->coupon_id)->first();
+
+        if($user_coupon){
+            $user_coupon->delete();
+            return $this->success('Coupon has been removed successfully');
+        }else{
+            return $this->error('Invalid coupon id provided','Not Found');
+        }
+      
+    }
 }

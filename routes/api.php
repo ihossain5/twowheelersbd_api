@@ -110,12 +110,14 @@ Route::controller(CouponController::class)
 ->middleware('auth.jwt')
 ->group(function () {
     Route::post('/apply-coupon', 'applyCoupon')->name('coupon.apply');
+    Route::post('/remove-coupon', 'removeCoupon')->name('remove.apply');
 
 });
 
 Route::controller(UserOrderController::class)
 ->middleware('auth.jwt')
 ->group(function () {
+    Route::post('/create-order', 'orderCreate');
     Route::get('/all-orders', 'orders');
     Route::get('/order-track/{order_id}', 'orderTrack')->name('order.track');
     Route::get('/order-details/{order_id}', 'orderDetails')->name('order.details');
