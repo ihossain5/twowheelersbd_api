@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 
 class Utils extends Controller{
 
-    public static function getBookingPostFix($lenght = 1){
-        $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        $code = '';
-        for($i = 1; $i <= $lenght; $i++){
-            $code = $code.$codeAlphabet[random_int(0, 35)];
-        }
-        return $code;
+    public static function getOrderId(){
+        $prefix = 'TWB';
+        $maxDigits = 8 - strlen($prefix);
+
+        $randomNumber = str_pad(mt_rand(0, pow(10, $maxDigits) - 1), $maxDigits, '0', STR_PAD_LEFT);
+
+        $orderID = $prefix . $randomNumber;
+
+        return $orderID;
     }
 
     public static function getShopWiseCartItems($cart_items){

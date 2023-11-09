@@ -28,6 +28,14 @@ class OrderStoreRequest extends FormRequest
             'division' => 'required|max:50',
             'district' => 'required|max:50',
             'address' => 'required',
+            'shops' => 'array',
+            'shops.*.*.product_id' => 'required|numeric',
+            'shops.*.*.price' => 'required|numeric',
+            'shops.*.*.quantity' => 'required|numeric',
+            'shops.*.*.total_price' => 'required|numeric',
+            'shops.*.*.size' => 'nullable',
+            'shops.*.*.color' => 'nullable',
         ];
     }
+
 }
