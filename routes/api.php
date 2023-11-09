@@ -3,6 +3,8 @@
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
@@ -101,6 +103,13 @@ Route::controller(WishlishtController::class)
     Route::get('/all-wishlists', 'wishlists');
     Route::post('/add-to-wishlist', 'wishlistAdd')->name('wishlist.add');
     Route::post('/remove-to-wishlist', 'wishlistRemove')->name('wishlist.remove');
+
+});
+
+Route::controller(CouponController::class)
+->middleware('auth.jwt')
+->group(function () {
+    Route::post('/apply-coupon', 'applyCoupon')->name('coupon.apply');
 
 });
 

@@ -27,5 +27,13 @@ class Controller extends BaseController
        ],404);
     }
 
+    public function error($message, $errors){
+        return response()->json([
+            'status' => false,
+            'errors' => $errors,
+            'message' => $message,
+       ]);
+    }
+
     
 }
