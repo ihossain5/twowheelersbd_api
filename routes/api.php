@@ -149,6 +149,10 @@ Route::controller(ProductController::class)
     Route::get('/search-products', 'searchProducts');
 });
 
+Route::get('colors',function(){
+    return response()->json(array_flip(config('app.colors')));
+});
+
 Route::fallback(function(){
     return response()->json([
         'message' => 'Page Not Found. If error persists, contact with site owner'], 404);

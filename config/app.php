@@ -22,6 +22,26 @@ return [
     'fcm_push_app_key' => env('FCM_PUSH_APP_KEY', ''),
     'URL' => env('URL', ''),
 
+    'colors'            => [
+        'White'       => '#FFFFFF',
+        'Black'       => '#000000',
+        'Red'         => '#FF0000',
+        'Silver'      => '#C0C0C0',
+        'Blue'        => '#0000FF',
+        'Green'       => '#008000',
+        'Yellow'      => '#FFFF00',
+        'Purple'      => '#800080',
+        'Grey'        => '#BFBBB2',
+        'Magenta'     => '#FF00FF',
+        'Brown'       => '#A52A2A',
+        'Light Green' => '#90EE90',
+        'Sky Blue'    => '#87CEEB',
+        'Indigo'      => '#4B0082',
+        'Pink'        => '#FFC0CB',
+        'Navy blue'   => '#000080',
+        'Olive'       => '#808000',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -174,6 +194,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        App\Providers\ColorServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -191,6 +212,7 @@ return [
         // 'Example' => App\Facades\Example::class,
         'JWTAuth'=>Tymon\JWTAuth\Facades\JWTAuth::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Color' => App\Facades\ColorUtilityFacade::class,
     ])->toArray(),
 
 ];
