@@ -14,6 +14,7 @@ class OrderItemResource extends JsonResource {
     public function toArray(Request $request): array {
         return [
             'product_id'    => $this->product_id,
+            'brand_name'    => $this->product?->brand?->name,
             'product_title' => $this->product->name,
             'product_image' => addUrl(collect(json_decode($this->product->images))),
             'size'          => $this->size,

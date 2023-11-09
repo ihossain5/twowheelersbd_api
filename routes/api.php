@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserOrderController;
+use App\Http\Controllers\WishlishtController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +53,8 @@ Route::controller(AuthController::class)
     Route::get('/get-bike-info', 'getBikeInfo')->middleware('auth.jwt')->name('user.bike.info');
     Route::post('/store-bike-info', 'storeBikeInfo')->middleware('auth.jwt')->name('user.bike.info.store');
 
+    Route::post('/user-delivery-address/{id}/update', 'updateDeliveryAddress')->middleware('auth.jwt')->name('user.delivery.address.update');
+
 
 });
 
@@ -92,12 +95,23 @@ Route::controller(BlogController::class)
     Route::post('/blogs/{id}/add-comment', 'addComment')->middleware('auth.jwt');
 });
 
+Route::controller(WishlishtController::class)
+->middleware('auth.jwt')
+->group(function () {
+    Route::get('/all-wishlists', 'wishlists');
+    Route::post('/add-to-wishlist', 'wishlistAdd')->name('wishlist.add');
+    Route::post('/remove-to-wishlist', 'wishlistRemove')->name('wishlist.remove');
+
+});
+
 Route::controller(UserOrderController::class)
 ->middleware('auth.jwt')
 ->group(function () {
     Route::get('/all-orders', 'orders');
-    Route::get('/ordr-track/{order_id}', 'orderTrack')->name('order.track');
-    Route::get('/ordr-details/{order_id}', 'orderDetails')->name('order.details');
+    Route::get('/order-track/{order_id}', 'orderTrack')->name('order.track');
+    Route::get('/order-details/{order_id}', 'orderDetails')->name('order.details');
+    Route::post('/cancel-order/{order_id}', 'orderCancel')->name('order.cancel');
+    Route::post('/refund-request-order/{order_id}', 'refundRequestOrder')->name('order.refund.request');
 });
 
 
