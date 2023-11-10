@@ -87,6 +87,10 @@ class Handler extends ExceptionHandler {
 
             return $this->errorResponse($e, 'Please verify your account', 503);
         }  
+        elseif ($e instanceof RefundNotEligibleException) {
+
+            return $this->errorResponse($e, 'This order does not eligible for refund', 500);
+        }  
         else {
             return $this->errorResponse($e, $e->getFile() . $e->getLine());
         }

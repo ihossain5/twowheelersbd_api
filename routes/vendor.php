@@ -38,6 +38,7 @@ Route::controller(OrderController::class)
         Route::get('/total-orders', 'totalOrders')->name('vendor.total.order');
         Route::get('/pending-orders', 'pendingOrders')->name('vendor.pending.order');
         Route::get('/orders/details/{id}', 'orderDetails')->name('vendor.details.order');
+        Route::post('/orders/{order}/status-change', 'orderStatusChange')->name('vendor.order.status.change');
     });
 
 Route::controller(VendorAuthController::class)

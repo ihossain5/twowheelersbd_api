@@ -6,6 +6,7 @@ use App\Constants\OrderStatus;
 use App\Http\Resources\OrderDetailResource;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller {
@@ -86,5 +87,15 @@ class OrderController extends Controller {
         $order = Order::with('items', 'items.product', 'user.address')->findOrFail($id);
 
         return $this->success(new OrderDetailResource($order));
+    }
+
+    public function orderStatusChange(Request $request, Order $order){
+        $this->validate($request, [
+            'status' => 'required|in:' . implode(',', array_values((new \ReflectionClass(OrderStatus::class))->getConstants())),
+        ]);
+
+      (new OrderService())->changeStatus($order, $request->status);
+
+      return $this->success(new OrderResource($order));
     }
 }

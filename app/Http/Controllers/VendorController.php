@@ -52,30 +52,34 @@ class VendorController extends Controller {
 
                 (new ImageUoloadService())->deleteImage(auth('vendor')->user()->shop->logo);
                 $logo = (new ImageUoloadService())->storeImage($request->logo, 'shop/', 180, 218);
-            } else {
-                $logo = auth('vendor')->user()->shop->logo;
-            }
+            } 
 
             if ($request->photo) {
                 (new ImageUoloadService())->deleteImage(auth('vendor')->user()->shop->photo);
                 $photo = (new ImageUoloadService())->storeImage($request->photo, 'shop/', 1600, 450);
-            } else {
-                $photo = auth('vendor')->user()->shop->photo;
-            }
+            } 
+        }
+
+        $shopData = [
+            'name'        => $request->name,
+            'slug'        => Str::slug($request->name),
+            'discription' => $request->discription,
+            'division'    => $request->division,
+        ];
+
+        if ($request->has('logo')) {
+            $shopData['logo'] = $logo;
+        }
+        
+        if ($request->has('photo')) {
+            $shopData['photo'] = $photo;
         }
 
         $shop = Shop::updateOrCreate(
             ['shop_owner_id' => $this->vendor_id],
-            [
-                'name'            => $request->name,
-                'slug'            => Str::slug($request->name),
-                'discription'     => $request->discription,
-                'division'        => $request->division,
-                // 'delivery_charge' => $request->delivery_charge,
-                'logo'            => $logo,
-                'photo'           => $photo,
-            ]
+            $shopData
         );
+        
         return $this->success(new ShopResource($shop));
     }
 

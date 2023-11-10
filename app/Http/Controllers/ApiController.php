@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Utility\Utils;
 use App\Http\Resources\BrandCategoryResource;
 use App\Http\Resources\BrandModelResource;
 use App\Http\Resources\BrandWiseModelResource;
@@ -10,6 +11,8 @@ use App\Models\Brand;
 use App\Models\BrandCategory;
 use App\Models\BrandModel;
 use App\Models\Product;
+use App\Models\ShopOwner;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
@@ -33,6 +36,12 @@ class ApiController extends Controller
              ->paginate($this->pagination);
 
         return $this->success(BrandModelResource::collection($model)->response()->getData(true));
+    }
+
+    public function modelDetails(BrandModel $model){
+        $model->load('catelogues','colors','specifications');
+
+        return $this->success(new BrandModelResource($model));
     }
 
     public function brandWiseModels(Request $request){
@@ -80,6 +89,36 @@ class ApiController extends Controller
 
         return $this->success(BrandWiseModelResource::collection($brands)->response()->getData(true));
 
+    }
+
+    public function otpResend(Request $request){
+        $this->validate($request, [
+            'type' => 'required|in:USER,VENDOR',
+            'mobile' => 'required',
+        ]);
+
+        $otp = generateOtp();
+
+        $id = null;
+
+        if($request->type == 'USER'){
+            $user = User::where('mobile',$request->mobile)->firstOrFail();
+            $user->otp_code = $otp;
+            $user->save();
+            $id = $user->id;
+        }else{
+            $owner = ShopOwner::where('mobile',$request->mobile)->firstOrFail();
+            $owner->otp = $otp;
+            $owner->save();
+            $id = $owner->id;
+        }
+
+        Utils::sendSms($request->mobile,'Your otp code is '. $otp);
+
+        $arr['message'] = 'Otp has sent to given number.';
+        $arr[$request->type.'_id'] = $id;
+
+        return $this->success($arr);
     }
     
 }
