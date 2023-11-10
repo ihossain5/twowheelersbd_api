@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Constants\OrderStatus;
+use App\Events\PushNotification;
 use App\Http\Controllers\Utility\Utils;
 use App\Http\Requests\OrderStoreRequest;
 use App\Http\Resources\UserOrderDetailResource;
@@ -13,7 +14,6 @@ use App\Models\Product;
 use App\Models\Shop;
 use App\Models\UserAddress;
 use App\Services\OrderService;
-use App\Services\PushNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -151,10 +151,12 @@ class UserOrderController extends Controller {
                 $title = 'Order has placed';
 
                 $sms = Utils::sendSms($request->mobile, $message);
-               (new PushNotification())->sendToOne($to, $title, $message);
+                event(new PushNotification($to, $title, $message));
 
                 //send notification to vendor
-               (new PushNotification())->sendToOne($shop->owner->device_id, $title, 'You have received an order. Order Id is #'. $order->order_id);
+                event(new PushNotification($shop->owner->device_id,$title, 'You have received an order. Order Id is #'. $order->order_id));
+                
+            //    (new PushNotification())->sendToOne($shop->owner->device_id, $title, 'You have received an order. Order Id is #'. $order->order_id);
 
             }
         });

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Constants\OrderStatus;
+use App\Events\PushNotification;
 use App\Http\Controllers\Utility\Utils;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -30,8 +31,10 @@ class OrderService {
         $title = 'Order Status Has Changed';
 
         $sms = Utils::sendSms($order->user->address()->first()->mobile, $message);
-        (new PushNotification())->sendToOne($to, $title, $message);
-        (new PushNotification())->sendToOne($order?->shop?->owner?->device_id ?? '', $title, $message);
+         event(new PushNotification($to, $title, $message));
+         event(new PushNotification($order?->shop?->owner?->device_id ?? '', $title, $message));
+        // (new PushNotification())->sendToOne($to, $title, $message);
+        // (new PushNotification())->sendToOne($order?->shop?->owner?->device_id ?? '', $title, $message);
 
         return $order;
     }

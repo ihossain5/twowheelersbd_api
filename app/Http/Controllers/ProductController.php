@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PushNotification;
 use App\Http\Resources\MotorbikeDetailsResource;
 use App\Http\Resources\ProductResource;
 use App\Models\BrandModel;
@@ -226,13 +227,19 @@ class ProductController extends Controller
     {
         $this->validate($request, ['rating' => 'required', 'review' => 'required']);
 
-        $shop = Product::findOrFail($id);
+        $product = Product::findOrFail($id);
+
         $review = new ProductReview();
         $review->product_id = $id;
         $review->user_id = auth()->user()->id;
         $review->rating = $request->rating;
         $review->review = $request->review;
         $review->save();
+
+        $message['message'] = auth()->user()->name. ' added a review to your product.';
+        $message['id'] = $id;
+
+        event(new PushNotification($product->shop?->owner?->device_id, 'New Review Added', $message));
 
         return $this->success('Review has been added successfully');
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PushNotification;
 use App\Http\Resources\ShopResource;
 use App\Http\Resources\ShopReviewResourece;
 use App\Http\Resources\ShopVideoResourece;
@@ -63,6 +64,10 @@ class ShopController extends Controller {
         $review->rating  = $request->rating;
         $review->review  = $request->review;
         $review->save();
+
+        $message = auth()->user()->name. ' added a review to your shop.';
+
+        event(new PushNotification($shop?->owner?->device_id, 'New Review Added', $message));
 
         return $this->success('Review has been added successfully');
     }
