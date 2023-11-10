@@ -89,13 +89,34 @@ class OrderController extends Controller {
         return $this->success(new OrderDetailResource($order));
     }
 
-    public function orderStatusChange(Request $request, Order $order){
+    public function orderStatusChange(Request $request, Order $order) {
         $this->validate($request, [
             'status' => 'required|in:' . implode(',', array_values((new \ReflectionClass(OrderStatus::class))->getConstants())),
         ]);
 
-      (new OrderService())->changeStatus($order, $request->status);
+        (new OrderService())->changeStatus($order, $request->status);
 
-      return $this->success(new OrderResource($order));
+        return $this->success(new OrderResource($order));
+    }
+
+    public function paidStatusChange(Order $order){
+        if($order->is_paid == 1){
+            return $this->error('This order amount is already paid','Already Paid');
+        }
+        $order->is_paid = 1;
+        $order->save();
+
+        return $this->success(new OrderResource($order));
+    }
+
+    public function deliverStatusChange(Order $order){
+        if($order->is_deliver_by_admin == 1){
+            return $this->error('This order is already forwarded to admin','Already Forwarded');
+        }
+
+        $order->is_deliver_by_admin = 1;
+        $order->save();
+
+        return $this->success(new OrderResource($order));
     }
 }
