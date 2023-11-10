@@ -8,6 +8,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\UserMessageController;
 use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\WishlishtController;
 use Illuminate\Http\Request;
@@ -116,6 +117,14 @@ Route::controller(CouponController::class)
 
 });
 
+Route::controller(UserMessageController::class)
+->middleware('auth.jwt')
+->group(function () {
+    Route::get('/all-messages', 'allMessages');
+    Route::get('/get-message/{id}', 'getMessageById');
+    Route::post('/send-message', 'sendMessage');
+});
+
 Route::controller(UserOrderController::class)
 ->middleware('auth.jwt')
 ->group(function () {
@@ -152,7 +161,7 @@ Route::controller(ProductController::class)
 });
 
 Route::get('colors',function(){
-    return response()->json(array_flip(config('app.colors')));
+    return response()->json(config('app.colors'));
 });
 
 Route::fallback(function(){
