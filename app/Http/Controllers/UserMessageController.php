@@ -10,6 +10,7 @@ use App\Models\Message;
 use App\Models\Shop;
 use App\Models\User;
 use App\Services\ImageUoloadService;
+use App\Services\MessageService;
 use Illuminate\Http\Request;
 
 class UserMessageController extends Controller
@@ -26,10 +27,8 @@ class UserMessageController extends Controller
         return $this->success(ChatResource::collection($messages));
     }
 
-    public function getMessageById($id){
-        $messages = Message::query()
-        ->where('chat_id',$id)
-        ->get();
+    public function getMessageById($id, MessageService $message){
+        $messages = $message->messagesById($id);
 
         return $this->success(MessageResource::collection($messages));
     }

@@ -122,7 +122,7 @@ Route::controller(UserMessageController::class)
 ->group(function () {
     Route::get('/all-messages', 'allMessages');
     Route::get('/get-message/{id}', 'getMessageById');
-    Route::post('/send-message', 'sendMessage');
+    Route::post('/send-message', 'sendMessage')->name('user.send.message');
 });
 
 Route::controller(UserOrderController::class)

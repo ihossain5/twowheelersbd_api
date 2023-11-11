@@ -15,7 +15,7 @@ class MessageResource extends JsonResource {
         return [
             'send_by' => $this->send_by,
             'message' => $this->message,
-            'image'   => $this->image,
+            'image'   => $this->when($request->routeIs('user.send.message'),$this->image ),
         ];
     }
 }

@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\Vendor\MotorbikeController;
-use App\Http\Controllers\Vendor\ProductController;
+use App\Http\Controllers\vendor\MessageController;
 use App\Http\Controllers\VendorAuthController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\Vendor\MotorbikeController;
+use App\Http\Controllers\Vendor\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(VendorController::class)
@@ -68,7 +69,7 @@ Route::controller(ProductController::class)
         Route::post('/products/store', 'productStore')->name('vendor.product.store');
         Route::get('/products/edit/{id}', 'productEdit')->name('vendor.product.edit');
         Route::delete('/products/delete/{id}', 'productDelete')->name('vendor.product.delete');
-        
+
         Route::post('/products/update/{id}', 'productUpdate')->name('vendor.product.update');
         Route::get('/all-category', 'categories')->name('vendor.all.categories');
         Route::get('/category/{id}/subcategory', 'subcategories')->name('vendor.all.subcategories');
@@ -78,7 +79,7 @@ Route::controller(ProductController::class)
         Route::delete('/motorbikes/delete/{id}', 'productDelete')->name('vendor.motorbike.delete');
 
         Route::get('/products/{id}/reviews', 'productReviews')->name('vendor.product.reviews');
-    });
+});
 
 Route::controller(MotorbikeController::class)
     ->middleware('auth.jwt', 'shop')
@@ -86,6 +87,14 @@ Route::controller(MotorbikeController::class)
         Route::get('/all-motorbikes', 'motorbikes')->name('vendor.all.motorbikes');
         Route::post('/motorbikes/store', 'motorbikeStore')->name('vendor.motorbike.store');
         Route::get('/motorbikes/edit/{id}', 'motorbikeEdit')->name('vendor.motorbike.edit');
-      
+
         Route::post('/motorbikes/update/{id}', 'motorbikeUpdate')->name('vendor.motorbike.update');
-    });
+});
+
+Route::controller(MessageController::class)
+->middleware('auth.jwt','shop')
+->group(function () {
+    Route::get('/all-messages', 'allMessages')->name('vendor.all.chat');
+    Route::get('/get-message/{id}', 'getMessageById');
+    Route::post('/send-message', 'sendMessage');
+});
