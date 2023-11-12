@@ -121,8 +121,8 @@ Route::controller(UserMessageController::class)
 ->middleware('auth.jwt')
 ->group(function () {
     Route::get('/all-messages', 'allMessages');
-    Route::get('/get-message/{id}', 'getMessageById');
-    Route::post('/send-message', 'sendMessage')->name('user.send.message');
+    Route::get('/get-message/{id}', 'getMessageById')->name('user.send.message');
+    Route::post('/send-message', 'sendMessage');
 });
 
 Route::controller(UserOrderController::class)
