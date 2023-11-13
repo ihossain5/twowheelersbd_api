@@ -33,8 +33,8 @@ class MotorbikeDetailsResource extends JsonResource {
             'catelogue_pdf'    => $this->catelogue_pdf,
             'video'            => $this->video,
             'quantity'         => $this->quantity,
-            'catelogues'       => ProductCatelogueResource::collection($this->catelogues),
-            'specifications'   => ProductSpecificationResource::collection($this->specifications),
+            'catelogues'       => ProductCatelogueResource::collection($this->model->catelogues),
+            'specifications'   => ProductSpecificationResource::collection($this->model->specifications),
             'reviews'          => ReviewResource::collection($this->reviews),
             // 'accessories'      => ProductResource::collection($this->model->products),
         ];
