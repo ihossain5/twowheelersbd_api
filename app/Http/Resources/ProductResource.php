@@ -65,7 +65,7 @@ class ProductResource extends JsonResource {
             'discount'         => $this->discount,
             'rating'           => $this->average_rating,
             'quantity'         => $this->quantity,
-            'is_motorbike'     => $this->is_motorbike == 0 ? 'YES' : 'NO',
+            'is_motorbike'     => $this->is_motorbike == 0 ? 'NO' : 'YES',
         ];
     }
 }
