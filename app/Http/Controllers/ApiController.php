@@ -6,10 +6,12 @@ use App\Http\Controllers\Utility\Utils;
 use App\Http\Resources\BrandCategoryResource;
 use App\Http\Resources\BrandModelResource;
 use App\Http\Resources\BrandWiseModelResource;
+use App\Http\Resources\CatelogueProductResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Brand;
 use App\Models\BrandCategory;
 use App\Models\BrandModel;
+use App\Models\BrandModelCatelogue;
 use App\Models\Product;
 use App\Models\ShopOwner;
 use App\Models\User;
@@ -119,6 +121,12 @@ class ApiController extends Controller
         $arr[$request->type.'_id'] = $id;
 
         return $this->success($arr);
+    }
+
+    public function catelogueDetails(BrandModelCatelogue $catelogue){
+        // dd($catelogue->catelogueProducts->pluck);
+
+        return $this->success(CatelogueProductResource::collection($catelogue->catelogueProducts));
     }
     
 }

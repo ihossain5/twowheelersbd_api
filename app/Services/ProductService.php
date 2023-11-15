@@ -13,7 +13,7 @@ class ProductService {
     }
 
     public function select(){
-        return $this->product->query()->select('id', 'name','images', 'selling_price', 'average_rating','regular_price','discount','brand_id','quantity');
+        return $this->product->query()->select('id', 'name','images', 'selling_price', 'average_rating','regular_price','discount','brand_id','quantity','is_motorbike');
     }
 
     public function condition($motorbike = 0){

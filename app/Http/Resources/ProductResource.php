@@ -43,7 +43,7 @@ class ProductResource extends JsonResource {
                 'catelogue_pdf'     => $this->catelogue_pdf,
                 'video'             => $this->video,
                 'quantity'          => $this->quantity,
-                'catelogues'        => ProductCatelogueResource::collection($this->catelogues),
+                'catelogues'        => ProductCatelogueResource::collection($this->all_catelogues),
                 'specifications'    => ProductSpecificationResource::collection($this->specifications),
                 'motors'            => ProductMotorResource::collection($this->motors),
                 'reviews'           => ReviewResource::collection($this->reviews),
@@ -65,6 +65,7 @@ class ProductResource extends JsonResource {
             'discount'         => $this->discount,
             'rating'           => $this->average_rating,
             'quantity'         => $this->quantity,
+            'is_motorbike'     => $this->is_motorbike == 0 ? 'YES' : 'NO',
         ];
     }
 }

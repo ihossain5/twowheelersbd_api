@@ -6,6 +6,7 @@ use App\Events\PushNotification;
 use App\Http\Resources\MotorbikeDetailsResource;
 use App\Http\Resources\ProductResource;
 use App\Models\BrandModel;
+use App\Models\BrandModelCatelogue;
 use App\Models\HotDealProduct;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -16,17 +17,14 @@ use App\Services\ProductService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
-{
+class ProductController extends Controller {
     public $productService;
 
-    public function __construct(ProductService $productService)
-    {
+    public function __construct(ProductService $productService) {
         $this->productService = $productService;
     }
 
-    public function products(Request $request)
-    {
+    public function products(Request $request) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -36,8 +34,7 @@ class ProductController extends Controller
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function productsByCategory(Request $request, $id)
-    {
+    public function productsByCategory(Request $request, $id) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -55,8 +52,7 @@ class ProductController extends Controller
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function productsBySubCategory(Request $request, $id)
-    {
+    public function productsBySubCategory(Request $request, $id) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -72,8 +68,7 @@ class ProductController extends Controller
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function productsByShop(Request $request, $id)
-    {
+    public function productsByShop(Request $request, $id) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -89,8 +84,7 @@ class ProductController extends Controller
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function productsByModel(Request $request, $id)
-    {
+    public function productsByModel(Request $request, $id) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -106,8 +100,7 @@ class ProductController extends Controller
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function productsByHotDeal(Request $request, $id)
-    {
+    public function productsByHotDeal(Request $request, $id) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -125,8 +118,7 @@ class ProductController extends Controller
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function shopWiseTopProducts(Request $request, $id)
-    {
+    public function shopWiseTopProducts(Request $request, $id) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -146,8 +138,7 @@ class ProductController extends Controller
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function shopWiseNewArraivalProducts(Request $request, $id)
-    {
+    public function shopWiseNewArraivalProducts(Request $request, $id) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -163,19 +154,31 @@ class ProductController extends Controller
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function getProductById($id)
-    {
+    public function getProductById($id) {
         $product = Product::query()
             ->select('id', 'sub_category_id', 'shop_id', 'brand_id', 'additional_name_1', 'additional_name_2', 'additional_name_3', 'additional_name_4', 'additional_name_5', 'colors', 'description', 'video', 'sizes', 'catelogue_pdf', 'name', 'quantity', 'discount', 'regular_price', 'images', 'sku', 'selling_price', 'average_rating')
             ->withCount('reviews')
-            ->with('subcategory:id,category_id,name', 'subcategory.category:id,name', 'shop:id,name,logo', 'catelogues', 'specifications', 'motors', 'reviews')
+            ->with('subcategory:id,category_id,name', 'subcategory.category:id,name', 'shop:id,name,logo', 'specifications', 'motors', 'reviews')
+            ->where('is_motorbike',0)
             ->findOrFail($id);
+
+        if ($product->brand_id !== null) {
+            $model_ids = $product->brand->models->pluck('id');
+
+            $catelogues = BrandModelCatelogue::query()
+            ->whereIn('brand_model_id', $model_ids)
+            ->where('sku', $product->sku)
+            ->paginate(8);
+        } else {
+            $catelogues = [];
+        }
+
+        $product->all_catelogues = $catelogues;
 
         return $this->success(new ProductResource($product));
     }
 
-    public function accessories(Request $request)
-    {
+    public function accessories(Request $request) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -193,8 +196,7 @@ class ProductController extends Controller
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function motorbikes($id, Request $request)
-    {
+    public function motorbikes($id, Request $request) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -212,40 +214,38 @@ class ProductController extends Controller
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function motorbikeDetails($id)
-    {
+    public function motorbikeDetails($id) {
         $motorbike = Product::query()
             ->select('id', 'sub_category_id', 'brand_model_id', 'shop_id', 'description', 'video', 'catelogue_pdf', 'name', 'quantity', 'discount', 'regular_price', 'images', 'sku', 'selling_price', 'average_rating', 'mileage')
             ->withCount('reviews')
-            ->with('subcategory:id,category_id,name', 'subcategory.category:id,name', 'shop:id,name', 'catelogues', 'specifications', 'reviews', 'model:id', 'model.products')
+            ->with('subcategory:id,category_id,name', 'subcategory.category:id,name', 'shop:id,name,logo', 'catelogues', 'specifications', 'reviews', 'model:id', 'model.products')
+            ->where('is_motorbike',1)
             ->findOrFail($id);
 
         return $this->success(new MotorbikeDetailsResource($motorbike));
     }
 
-    public function storeRating($id, Request $request)
-    {
+    public function storeRating($id, Request $request) {
         $this->validate($request, ['rating' => 'required', 'review' => 'required']);
 
         $product = Product::findOrFail($id);
 
-        $review = new ProductReview();
+        $review             = new ProductReview();
         $review->product_id = $id;
-        $review->user_id = auth()->user()->id;
-        $review->rating = $request->rating;
-        $review->review = $request->review;
+        $review->user_id    = auth()->user()->id;
+        $review->rating     = $request->rating;
+        $review->review     = $request->review;
         $review->save();
 
-        $message['message'] = auth()->user()->name. ' added a review to your product.';
-        $message['id'] = $id;
+        $message['message'] = auth()->user()->name . ' added a review to your product.';
+        $message['id']      = $id;
 
         event(new PushNotification($product->shop?->owner?->device_id, 'New Review Added', $message));
 
         return $this->success('Review has been added successfully');
     }
 
-    public function filterProducts(Request $request)
-    {
+    public function filterProducts(Request $request) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }
@@ -283,8 +283,7 @@ class ProductController extends Controller
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }
 
-    public function searchProducts(Request $request)
-    {
+    public function searchProducts(Request $request) {
         if ($request->pagination) {
             $this->pagination = $request->pagination;
         }

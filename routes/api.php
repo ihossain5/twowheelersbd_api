@@ -90,6 +90,7 @@ Route::controller(ApiController::class)
     Route::get('/brand/{id}/brand-category-wise-models', 'brandCategoryWiseModels')->name('brand.category.models');
     Route::get('/models', 'models')->name('all.models');
     Route::get('/models/{model}/details', 'modelDetails')->name('models.details');
+    Route::get('/catelogues/{catelogue}/details', 'catelogueDetails')->name('catelogue.details');
     Route::post('resend-otp','otpResend')->name('otp.resend');
 });
 
