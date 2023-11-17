@@ -92,12 +92,11 @@ class UserOrderController extends Controller {
     public function orderCreate(OrderStoreRequest $request){
         // dd($request->all());
 
-        $orderId = Utils::getOrderId();
-
-        DB::transaction(function() use($request, $orderId){
+        DB::transaction(function() use($request){
             $this->createOrUpdateAddress($request);
             
             foreach ($request->shops as $shop_id => $shop_arry) {
+                $orderId = Utils::getOrderId();
                 $sub_total = array_sum(array_column($shop_arry, 'total_price'));
     
                 $shop = Shop::find($shop_id);
@@ -162,7 +161,7 @@ class UserOrderController extends Controller {
         });
 
         $arr['message'] = 'Success! Order has been placed';
-        $arr['order_id'] = $orderId;
+        // $arr['order_id'] = $orderId;
 
         return $this->success($arr);
     }
