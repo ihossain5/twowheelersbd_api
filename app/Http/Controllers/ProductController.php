@@ -246,8 +246,9 @@ class ProductController extends Controller {
     }
 
     public function filterProducts(Request $request) {
+        $pagination = 50;
         if ($request->pagination) {
-            $this->pagination = $request->pagination;
+            $pagination = $request->pagination;
         }
 
         $products = $this->productService->allProduct()
@@ -278,7 +279,7 @@ class ProductController extends Controller {
             return $this->errorResponse('', 'Product');
         }
 
-        $products = $products->latest()->paginate($this->pagination);
+        $products = $products->latest()->paginate($pagination);
 
         return $this->success(ProductResource::collection($products)->response()->getData(true));
     }

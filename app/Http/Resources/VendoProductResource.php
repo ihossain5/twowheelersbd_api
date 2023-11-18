@@ -13,16 +13,17 @@ class VendoProductResource extends JsonResource {
      */
     public function toArray(Request $request): array {
         return [
-            'id'           => $this->id,
-            'name'         => $this->name,
-            'category'     => $this->subcategory->category->name,
-            'sub_category' => $this->subcategory->name,
-            'sku'          => $this->sku,
-            'images'       => addUrl(collect(json_decode($this->images))),
-            'quantity'     => $this->quantity,
-            'price'        => $this->selling_price,
-            'status'       => $this->status ?? 'PENDING',
-            'is_visible'   => $this->is_visible == 1 ? 'Visible' : 'Not Visible',
-        ];  
+            'id'             => $this->id,
+            'name'           => $this->name,
+            'category'       => $this->subcategory->category->name,
+            'sub_category'   => $this->subcategory->name,
+            'sku'            => $this->sku,
+            'images'         => addUrl(collect(json_decode($this->images))),
+            'quantity'       => $this->quantity,
+            'price'          => $this->selling_price,
+            'total_reviews'  => $this->all_reviews_count,
+            'status'         => $this->status ?? 'PENDING',
+            'visible_status' => $this->is_visible,
+        ];
     }
 }

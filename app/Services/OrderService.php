@@ -51,7 +51,7 @@ class OrderService {
 
         $order->save();
 
-        $to    = auth()->user()->device_id ?? '';
+        $to    = $order->user->device_id ?? '';
         $title = 'Order Status Has Changed';
 
         $sms = Utils::sendSms($order->user->address()->first()->mobile, $message);

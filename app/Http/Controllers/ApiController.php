@@ -76,7 +76,8 @@ class ApiController extends Controller
     public function brandCategoryWiseModels(Request $request, $id){
         if($request->pagination) $this->pagination = $request->pagination;
 
-            $brands = BrandCategory::query()->select('id','name')
+            $brands = BrandCategory::query()
+            ->select('id','name')
             ->where('brand_id',$id)
             ->with('models');
            

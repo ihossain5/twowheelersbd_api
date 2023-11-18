@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\vendor\MessageController;
+use App\Http\Controllers\Vendor\DashBoardController;
+use App\Http\Controllers\Vendor\MessageController;
 use App\Http\Controllers\VendorAuthController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\Vendor\MotorbikeController;
@@ -79,6 +80,7 @@ Route::controller(ProductController::class)
         Route::delete('/motorbikes/delete/{id}', 'productDelete')->name('vendor.motorbike.delete');
 
         Route::get('/products/{id}/reviews', 'productReviews')->name('vendor.product.reviews');
+        Route::post('/products/{id}/review-approve', 'productReviewApprove')->name('vendor.product.reviews.approve');
 });
 
 Route::controller(MotorbikeController::class)
@@ -98,3 +100,10 @@ Route::controller(MessageController::class)
     Route::get('/get-message/{id}', 'getMessageById');
     Route::post('/send-message', 'sendMessage');
 });
+
+Route::controller(DashBoardController::class)
+->middleware('auth.jwt','shop')
+->group(function () {
+    Route::post('/dashboard', 'dashboard')->name('vendor.dashboard');
+});
+

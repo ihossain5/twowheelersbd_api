@@ -14,7 +14,7 @@ class MotorbikeDetailsResource extends JsonResource {
     public function toArray(Request $request): array {
         return [
             'id'               => $this->id,
-            'model_id'         => $this->model->id,
+            'model_id'         => $this->model?->id,
             'name'             => $this->name,
             'images'           => addUrl(collect(json_decode($this->images))),
             'regular_price'    => $this->regular_price,
@@ -24,6 +24,7 @@ class MotorbikeDetailsResource extends JsonResource {
             'total_reviews'    => $this->reviews_count,
             'category'         => $this->subcategory?->category->name,
             'condition'        => $this->subcategory?->name,
+            'shop_id'          => $this->shop?->id,
             'shop'             => $this->shop?->name,
             'shop_logo'        => $this->shop?->logo,
             'description'      => $this->description,

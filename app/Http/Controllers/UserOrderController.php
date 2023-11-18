@@ -146,7 +146,7 @@ class UserOrderController extends Controller {
                 }
 
                 $message = 'Thanks for purchasing from Two Wheelers Bd. Your order ID is #'. $order->order_id;
-                $to = auth()->user()->device_id ?? '';
+                $to = $order->user->device_id ?? '';
                 $title = 'Order has placed';
 
                 $sms = Utils::sendSms($request->mobile, $message);
@@ -168,6 +168,12 @@ class UserOrderController extends Controller {
 
     private function createOrUpdateAddress($request){
         $address = UserAddress::query()->where('user_id', auth()->user()->id)->first();
+
+        $this->validate($request,[
+            'email' => 'unique:user_addresses,email,'.$address?->id,
+            'mobile' => 'unique:user_addresses,mobile,'.$address?->id,
+        ]);
+        
         if(!$address){
             $user_address = new UserAddress();
             $user_address->user_id = auth()->user()->id;

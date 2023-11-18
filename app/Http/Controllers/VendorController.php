@@ -36,8 +36,8 @@ class VendorController extends Controller {
         if ($this->shop_id == null) {
             $this->validate($request, [
                 'name'  => 'required',
-                'logo'  => 'required|image|mimes:peg,png,jpg',
-                'photo' => 'required|image|mimes:peg,png,jpg',
+                'logo'  => 'required|image|mimes:peg,png,jpg|max:1024',
+                'photo' => 'required|image|mimes:peg,png,jpg|max:1024',
             ]);
             $logo  = (new ImageUoloadService())->storeImage($request->logo, 'shop/', 180, 218);
             $photo = (new ImageUoloadService())->storeImage($request->photo, 'shop/', 1600, 450);
@@ -45,8 +45,8 @@ class VendorController extends Controller {
         } else {
             $this->validate($request, [
                 'name'  => 'required',
-                'logo'  => 'image|mimes:peg,png,jpg',
-                'photo' => 'image|mimes:peg,png,jpg',
+                'logo'  => 'image|mimes:peg,png,jpg|max:1024',
+                'photo' => 'image|mimes:peg,png,jpg|max:1024',
             ]);
             if ($request->logo) {
 
@@ -106,7 +106,7 @@ class VendorController extends Controller {
 
     public function shopVideoCreate(Request $request, VideoService $videoService) {
         $request->validate([
-            'preview_image' => 'required|image|max:1024|mimes:jpg,jpeg,png',
+            'preview_image' => 'required|image|max:1024|mimes:jpg,jpeg,png|max:1024',
             'link'          => 'required|string',
             'status'        => 'required|boolean',
         ]);
@@ -120,7 +120,7 @@ class VendorController extends Controller {
     public function shopVideoUpdate(Request $request, VideoService $videoService, $id) {
         // dd($request->all());
         $request->validate([
-            'preview_image' => 'image|max:1024|mimes:jpg,jpeg,png',
+            'preview_image' => 'image|max:1024|mimes:jpg,jpeg,png|max:1024',
             'link'          => 'required|string',
             'status'        => 'required|boolean',
         ]);
@@ -186,7 +186,7 @@ class VendorController extends Controller {
         // dd($request->all());
         $this->validate($request, [
             'title'                 => 'required',
-            'banner'                => 'required|mimes:jpg,jpeg,png',
+            'banner'                => 'required|mimes:jpg,jpeg,png|max:2048',
             'products'              => 'required',
             'products.*.id'         => 'required|unique:hot_deal_products,product_id',
             'products.*.percentage' => 'required',
@@ -207,7 +207,7 @@ class VendorController extends Controller {
         // dd($request->all());
         $this->validate($request, [
             'title'        => 'required',
-            'banner'       => 'mimes:jpg,jpeg,png',
+            'banner'       => 'mimes:jpg,jpeg,png|max:2048',
             'old_products' => 'required',
         ]);
         $deal = HotDeal::findOrFail($id);

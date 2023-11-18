@@ -42,6 +42,7 @@ class AuthService
             $data->slug = Str::slug($request_data['name']);
             $data->mobile = $request_data['mobile'];
             $data->password = $request_data['password'];
+            $data->email = $request_data['email'];
             $data->status = 'Pending';
             $data->otp = $otp;
             $data->otp_expires_time = $exprireTime;

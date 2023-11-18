@@ -41,6 +41,10 @@ class Product extends Model
         return $this->hasMany(ProductReview::class)->where('status',1);
     }
 
+    public function all_reviews(){
+        return $this->hasMany(ProductReview::class);
+    }
+
     protected function cateloguePdf(): Attribute
     {
         return Attribute::make(

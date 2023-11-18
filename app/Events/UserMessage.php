@@ -17,13 +17,14 @@ class UserMessage implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public $message, $user_id, $shop;
+    public $message, $user_id, $shop, $image;
 
-    public function __construct($message, $user_id, $shop)
+    public function __construct($message, $user_id, $shop, $image)
     {
         $this->message = $message;
         $this->user_id = $user_id;
         $this->shop = $shop;
+        $this->image = $image;
     }
 
     public function broadcastAs(): string

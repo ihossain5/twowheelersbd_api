@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MotorbikeStoreRequest;
 use App\Http\Requests\MotorbikeUpdateRequest;
 use App\Http\Resources\MotorbikeEditResource;
-use App\Http\Resources\ProductEditResource;
 use App\Http\Resources\VendoProductResource;
 use App\Models\Product;
 use App\Models\SubCategory;
-use App\Services\ProductService;
 use App\Services\ProductStoreService;
 use Illuminate\Http\Request;
 
@@ -23,6 +21,7 @@ class MotorbikeController extends Controller {
 
     public function motorbikes(Request $request) {
         $products = Product::query()->select('id', 'name', 'images', 'sub_category_id', 'sku', 'quantity', 'selling_price', 'is_visible', 'status')
+        ->withCount('all_reviews')
             ->where('shop_id', $this->shop_id)
             ->where('is_motorbike', 1)
             ->when($request->has('name'), function ($query) use ($request) {
@@ -51,20 +50,20 @@ class MotorbikeController extends Controller {
         return $this->success(VendoProductResource::collection($products)->response()->getData(true));
     }
 
-    public function motorbikeStore(MotorbikeStoreRequest $request, ProductStoreService $productStoreService){
+    public function motorbikeStore(MotorbikeStoreRequest $request, ProductStoreService $productStoreService) {
         // dd($request->all());
         $product = $productStoreService->store($request->all(), $this->shop_id);
 
         return $this->success(new VendoProductResource($product));
     }
 
-    public function motorbikeEdit($id){
+    public function motorbikeEdit($id) {
         $product = Product::findOrFail($id);
-        
+
         return $this->success(new MotorbikeEditResource($product));
     }
 
-    public function motorbikeUpdate(MotorbikeUpdateRequest $request, $id, ProductStoreService $productStoreService){
+    public function motorbikeUpdate(MotorbikeUpdateRequest $request, $id, ProductStoreService $productStoreService) {
         $product = Product::findOrFail($id);
 
         $product = $productStoreService->store($request->all(), $this->shop_id, $product);

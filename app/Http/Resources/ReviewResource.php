@@ -18,7 +18,7 @@ class ReviewResource extends JsonResource {
             'user_photo' => $this->user?->photo,
             'rating'     => $this->rating,
             'review'     => $this->review,
-            'status'     => $this->status,
+            'status'     => $this->status == 1 ? (int) 1 : (int) 0,
             'date'       => formatDate($this->created_at),
         ];
     }
