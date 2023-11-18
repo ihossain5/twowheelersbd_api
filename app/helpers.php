@@ -24,6 +24,17 @@ function Image_BASE_URL(){
     return $url;
 }
 
+function File_BASE_URL(){
+
+    $url = 'files/';
+
+    if(config('app.env') == 'production') {
+        $url = '/home/twowheel/public_html/files/';
+    }
+
+    return $url;
+}
+
 function addUrl($images){
     $data = [];
     foreach ($images as $image){
