@@ -35,6 +35,17 @@ function File_BASE_URL(){
     return $url;
 }
 
+function File_URL(){
+
+    $url = 'files/';
+
+    if(config('app.env') == 'production') {
+        $url = 'https://twowheelersbd.com/files/';
+    }
+
+    return $url;
+}
+
 function addUrl($images){
     $data = [];
     foreach ($images as $image){
