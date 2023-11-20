@@ -15,6 +15,7 @@ class ChatResource extends JsonResource {
         if ($request->routeIs('vendor.all.chat')) {
             return [
                 'chat_id'    => $this->id,
+                'user_id'    => $this->user_id,
                 'user_name'  => $this->user?->name,
                 'user_photo' => $this->user?->photo,
             ];
@@ -22,6 +23,7 @@ class ChatResource extends JsonResource {
 
         return [
             'chat_id'   => $this->id,
+            'user_id'   => $this->user_id,
             'shop_name' => $this->owner?->shop?->name,
             'shop_logo' => $this->owner?->shop?->logo,
         ];

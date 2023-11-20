@@ -16,6 +16,7 @@ class UserResource extends JsonResource {
 
             'access_token' => $this->when($request->routeIs('user.profile') == false, $this->token),
             'token_type'   => $this->when($request->routeIs('user.profile') == false, 'bearer'),
+            'id'           => $this->id,
             'name'         => $this->name,
             'photo'        => $this->photo,
             'mobile'       => $this->mobile,
