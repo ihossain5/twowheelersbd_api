@@ -24,6 +24,7 @@ class ChatResource extends JsonResource {
         return [
             'chat_id'   => $this->id,
             'user_id'   => $this->user_id,
+            'shop_id'   => $this->owner?->shop?->id,
             'shop_name' => $this->owner?->shop?->name,
             'shop_logo' => $this->owner?->shop?->logo,
         ];
