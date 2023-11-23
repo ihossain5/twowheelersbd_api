@@ -32,7 +32,7 @@ class BrandModelResource extends JsonResource {
 
             'description'    => $this->info,
             'video'          => $this->video,
-            'catelogue_pdf'  => BASE_URL() . $this->catelogue_pdf,
+            'catelogue_pdf'  => $this->catelogue_pdf,
             'catelogues'     => BrandModelCatelogueResource::collection($this->catelogues),
             'colors'         => BrandModelColorResource::collection($this->colors),
             'specifications' => BrandModelSpicificationResource::collection($this->specifications),

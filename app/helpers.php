@@ -37,7 +37,7 @@ function File_BASE_URL(){
 
 function File_URL(){
 
-    $url = 'files/';
+    $url = 'http://127.0.0.1:8000/files/';
 
     if(config('app.env') == 'production') {
         $url = 'https://twowheelersbd.com/files/';
