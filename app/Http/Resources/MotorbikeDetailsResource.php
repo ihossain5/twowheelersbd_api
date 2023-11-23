@@ -31,7 +31,7 @@ class MotorbikeDetailsResource extends JsonResource {
             'publish_date'     => formatDate($this->created_at),
             'sku'              => $this->sku,
             'mileage'          => $this->mileage,
-            'catelogue_pdf'    => $this->catelogue_pdf,
+            'catelogue_pdf'    => $this->model?->catelogue_pdf,
             'video'            => $this->video,
             'quantity'         => $this->quantity,
             'catelogues'       => ProductCatelogueResource::collection($this->model->catelogues),

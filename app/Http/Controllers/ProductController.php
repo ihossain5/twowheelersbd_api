@@ -218,7 +218,7 @@ class ProductController extends Controller {
         $motorbike = Product::query()
             ->select('id', 'sub_category_id', 'brand_model_id', 'shop_id', 'description', 'video', 'catelogue_pdf', 'name', 'quantity', 'discount', 'regular_price', 'images', 'sku', 'selling_price', 'average_rating', 'mileage')
             ->withCount('reviews')
-            ->with('subcategory:id,category_id,name', 'subcategory.category:id,name', 'shop:id,name,logo', 'catelogues', 'specifications', 'reviews', 'model:id', 'model.products')
+            ->with('subcategory:id,category_id,name', 'subcategory.category:id,name', 'shop:id,name,logo', 'catelogues', 'specifications', 'reviews', 'model:id,catelogue_pdf', 'model.products')
             ->where('is_motorbike',1)
             ->findOrFail($id);
 
