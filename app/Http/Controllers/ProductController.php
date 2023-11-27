@@ -7,6 +7,7 @@ use App\Http\Resources\MotorbikeDetailsResource;
 use App\Http\Resources\ProductResource;
 use App\Models\BrandModel;
 use App\Models\BrandModelCatelogue;
+use App\Models\CatelogueProduct;
 use App\Models\HotDealProduct;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -162,16 +163,15 @@ class ProductController extends Controller {
             ->where('is_motorbike',0)
             ->findOrFail($id);
 
-        if ($product->brand_id !== null) {
-            $model_ids = $product->brand->models->pluck('id');
+            $product_ids = Product::query()->where('sku',$product->sku)->where('id','!=',$id)->pluck('id');
 
-            $catelogues = BrandModelCatelogue::query()
-            ->whereIn('brand_model_id', $model_ids)
-            ->where('sku', $product->sku)
-            ->paginate(8);
-        } else {
-            $catelogues = [];
-        }
+            if($product_ids){
+                $catelogue_ids = CatelogueProduct::query()->whereIn('product_id',$product_ids)->pluck('brand_model_catelogue_id');
+            
+                $catelogues = BrandModelCatelogue::query()->whereIn('id', $catelogue_ids)->get();
+            }else{
+                $catelogues = []; 
+            }
 
         $product->all_catelogues = $catelogues;
 
