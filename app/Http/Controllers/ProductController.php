@@ -163,7 +163,7 @@ class ProductController extends Controller {
             ->where('is_motorbike',0)
             ->findOrFail($id);
 
-            $product_ids = Product::query()->where('sku',$product->sku)->where('id','!=',$id)->pluck('id');
+            $product_ids = Product::query()->where('sku',$product->sku)->pluck('id');
 
             if($product_ids){
                 $catelogue_ids = CatelogueProduct::query()->whereIn('product_id',$product_ids)->pluck('brand_model_catelogue_id');
