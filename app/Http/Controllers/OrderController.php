@@ -57,7 +57,7 @@ class OrderController extends Controller {
             return $this->errorResponse(null, 'Shop');
         }
 
-        $orders = $orders->paginate($this->pagination);
+        $orders = $orders->latest()->paginate($this->pagination);
 
         return $this->success(OrderResource::collection($orders)->response()->getData(true));
     }
@@ -78,7 +78,7 @@ class OrderController extends Controller {
             return $this->errorResponse(null, 'Shop');
         }
 
-        $orders = $orders->paginate($this->pagination);
+        $orders = $orders->latest()->paginate($this->pagination);
 
         return $this->success(OrderResource::collection($orders)->response()->getData(true));
     }
