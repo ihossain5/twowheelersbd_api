@@ -15,7 +15,7 @@ class OrderService {
         // dd($status);
         $message = 'Your order #' . $order->order_id . ' status has been changed from ' . $order->status . ' to ' . $status;
 
-        $order->status = $status;
+        
 
         if ($status == OrderStatus::CANCELLED) {
             $this->adjustQuantity($order->id);
@@ -48,7 +48,7 @@ class OrderService {
             $order->refunded_at = null;
             $order->is_refunded = 0;
         }
-
+        $order->status = $status;
         $order->save();
 
         $to    = $order->user->device_id ?? '';
