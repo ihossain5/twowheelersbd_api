@@ -16,7 +16,7 @@ class MotorbikeResource extends JsonResource {
             'id'               => $this->id,
             'category'         => $this->subcategory->category->name,
             'condition'        => $this->subcategory->name,
-            'shop_id'             => $this->shop->id,
+            'shop_id'          => $this->shop->id,
             'shop'             => $this->shop->name,
             'shop_logo'        => $this->shop->logo,
             'brand'            => $this->brand_id !== null ? $this->brand->name : 'ALL',
