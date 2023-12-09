@@ -70,12 +70,13 @@ class ProductController extends Controller {
         ->withCount('all_reviews')
             ->where('shop_id', $this->shop_id)
             ->where('is_motorbike', 0)
-            ->when($request->has('name'), function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->name . '%');
+            ->when($request->has('search'), function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->search . '%')
+                      ->orWhere('sku', 'like', '%' . $request->search . '%');
             })
-            ->when($request->has('sku'), function ($query) use ($request) {
-                $query->where('sku', 'like', '%' . $request->sku . '%');
-            })
+            // ->when($request->has('sku'), function ($query) use ($request) {
+            //     $query->where('sku', 'like', '%' . $request->sku . '%');
+            // })
             ->when($request->has('category_id') && request('category_id') != 'ALL', function ($query) use ($request) {
                 $ids = SubCategory::query()->where('category_id', $request->category_id)->pluck('id');
                 $query->whereIn('sub_category_id', $ids);

@@ -24,11 +24,9 @@ class MotorbikeController extends Controller {
         ->withCount('all_reviews')
             ->where('shop_id', $this->shop_id)
             ->where('is_motorbike', 1)
-            ->when($request->has('name'), function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->name . '%');
-            })
-            ->when($request->has('sku'), function ($query) use ($request) {
-                $query->where('sku', 'like', '%' . $request->sku . '%');
+            ->when($request->has('search'), function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->search . '%')
+                      ->orWhere('sku', 'like', '%' . $request->search . '%');
             })
             ->when($request->has('category_id') && request('category_id') != 'ALL', function ($query) use ($request) {
                 $ids = SubCategory::query()->where('category_id', $request->category_id)->pluck('id');
